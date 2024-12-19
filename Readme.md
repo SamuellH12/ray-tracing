@@ -1,5 +1,13 @@
 # Ray Tracing
 
+### Grupo 7
+- Samuell Henrique Carvalho Paes Costa
+- Pedro Calheiros
+- Pedro Henrique Moraes de Sousa Silva
+- Henrique Melo
+
+<hr>
+
 Repositório base em C++ para o projeto da disciplina de **Processamento Gráfico**.
 
 Este repositório fornece um ponto de partida para a implementação de um sistema de Ray Tracing. Inclui um sistema de leitura de arquivos `.obj` e `.mtl` para facilitar a criação de casos de testes **a partir da segunda entrega**.
