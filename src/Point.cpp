@@ -1,15 +1,17 @@
 #ifndef POINTHEADER
 #define POINTHEADER
+#include <iostream>
+#include "Vector.cpp"
 
 /*
 Classe de pontos.
-
-A saber que:
-    - x = componente x
-    - y = componente y
-    - z = componente z
-
 A classe precisa ser instanciada passando as componentes x, y e z
+*/
+/*
+Operações com pontos
+diferença -> vetor
+soma com vetor -> pt
+sub vetor pt -> pt
 */
 
 class point{
@@ -21,19 +23,15 @@ public:
 
     //Construtores
     point() {}
-    point(double x, double y, double z)
-    {
-        this->x = x;
-        this->y = y;
-        this->z = z;
-    }
+    point(double x, double y, double z) : x(x), y(y), z(z) {}
 
     //Implemente os métodos de pontos aqui
+    vetor  operator- (const point&a) const{ return vetor(x-a.x, y-a.y, z-a.z); }  
+    point  operator+ (const vetor&v) const{ return point(x+v.getX(), y+v.getY(), z+v.getZ()); }  //soma c/ vetor
+    point  operator- (const vetor&v) const{ return point(x-v.getX(), y-v.getY(), z-v.getZ()); }  //sub  c/ vetor
 
     //Print do vetor no formato (x, y, z)
-    void print(){
-        std::cout << "(" << x << ", " << y << ", " << z << ")" << std::endl;
-    }
+    void print(){ std::cout << "(" << x << ", " << y << ", " << z << ")" << std::endl; }
 
     //Getters
     double getX() const { return x; }
