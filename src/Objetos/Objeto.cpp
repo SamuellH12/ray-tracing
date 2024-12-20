@@ -18,7 +18,7 @@ public:
 objeto(){}
 objeto(point pos, vetor color) : pos(pos), color(color) {}
 
-virtual bool has_intersection(ray r){ return false; }
+virtual bool has_intersection(ray r){ return true; }
 //position // normal // color
 virtual std::tuple<point, vetor, vetor> get_intersection(ray r){ return std::tuple<point, vetor, vetor>(); }
 
