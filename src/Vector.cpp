@@ -2,7 +2,7 @@
 #define VECTORHEADER
 #include <iostream>
 #include <math.h>
-#include "Point.cpp"
+// #include "Point.cpp"
 
 /*
 Classe de vetores.
@@ -10,15 +10,15 @@ A classe precisa ser instanciada passando as componentes x, y e z
 */
 /*
 Operações a implementar:
-Soma de vetores -> vetor
-subtração de vetores -> vetor
-mult por escalar -> vetor
-div por escalar -> vetor
-produto interno -> escalar
+ok Soma de vetores -> vetor
+ok subtração de vetores -> vetor
+ok mult por escalar -> vetor
+ok div por escalar -> vetor
+ok produto interno -> escalar
 Get perpendicular to vector
 get perpendicular to plane
 */
-
+class point;
 
 class vetor{
     private:
@@ -38,6 +38,8 @@ class vetor{
     double operator* (const vetor&v) const{ return  x*v.x + y*v.y + z*v.z; }  //DOT product / Produto interno
     vetor  operator* (double c) const{ return vetor(x*c, y*c, z*c); } //mult por escalar
     vetor  operator/ (double c) const{ return vetor(x/c, y/c, z/c); } //div por escalar
+    vetor  operator% (vetor v) const {  return vetor(y*v.z - z*v.y, z*v.x - x*v.z, x*v.y - y*v.x); } // cross product 
+    vetor normalized(){ return *this / sqrt((*this)*(*this)); }
 
     //Print do vetor no formato <x, y, z>
     void print(){ std::cout << "<" << x << ", " << y << ", " << z << ">" << std::endl; }
