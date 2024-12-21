@@ -49,7 +49,7 @@ class Camera{
     }
 
     //retorna um vetor com as cores
-    std::vector<vetor> shot(std::vector<objeto*> objetos){
+    std::vector<vetor> shot(std::vector<objeto> objetos){
         std::vector<vetor> tela;
 
         point canto_up_lft = c + u*(v_res/2.0 - 0.5) - w*(h_res/2.0 - 0.5) - v*dist;
@@ -64,8 +64,8 @@ class Camera{
                 double dist = 1.0/0.0; //double INF
 
                 for(auto &obj : objetos){
-                    if(!obj->has_intersection(r)) continue;
-                    auto [inter, normal, col] = obj->get_intersection(r);
+                    if(!obj.has_intersection(r)) continue;
+                    auto [inter, normal, col] = obj.get_intersection(r);
 
                     auto d = (inter - o) * (inter - o);
                     if(d < dist) {

@@ -27,8 +27,8 @@ int main(){
 
     Camera cam(pos, mira, up, dist, v_res, h_res);
 
-    std::vector<objeto*> objs;
-    esfera* a = new esfera(point(45, -45, 45), 20, vetor(0, 0, 1));
+    std::vector<objeto> objs;
+    esfera a = esfera(point(45, -45, 45), 20, vetor(0, 0, 1));
     objs.push_back(a);
    
     std::vector<vetor> cores = cam.shot(objs);
