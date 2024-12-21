@@ -44,7 +44,7 @@ class Camera{
         up = up.normalized();
         u = up - ( v * ((v*up) / (v*v)));
         u = u.normalized();
-        w = (u % v).normalized();
+        w = (v % u).normalized();
     }
 
     //retorna um vetor com as cores
@@ -54,10 +54,10 @@ class Camera{
         for(int y=0; y<v_res; y++) {
             for(int x=0; x<h_res; x++)
             {
-                double px = (2.0 * x / h_res - 1.0);
-                double py = (2.0 * y / v_res - 1.0);
+                double px = ((2.0 *x + 1.0) / (2.0 * h_res) - 0.5);
+                double py = ((2.0 * y + 1.0) / (2.0 * v_res) - 0.5);
 
-                vetor d =  w * px + u * py - v*dist;
+                vetor d =  w * px - u * py - v*dist;
                 ray r(c, d);
 
                 vetor color(0, 0, 0);

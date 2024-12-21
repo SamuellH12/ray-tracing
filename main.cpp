@@ -21,15 +21,15 @@ int main(){
     point mira (0, 0, 1);
     auto x = pos - mira;
     vetor up (0, 1, 0);
-    double dist = 1;
+    double dist = 0.25;
     int v_res=600;
-    int h_res=800; 
+    int h_res=600; 
 
     Camera cam(pos, mira, up, dist, v_res, h_res);
 
     std::vector<objeto*> objs;
     esfera* a = new esfera(point(0, 0, 5), 2, vetor(1, 1, 0));
-    esfera* b = new esfera(point(2, 0, 5), 1, vetor(1, 0, 1));
+    esfera* b = new esfera(point(2, 3, 5), 1, vetor(1, 0, 1));
     esfera* c = new esfera(point(-2, 0, 5), 1.3, vetor(0, 1, 1));
     plano* p = new plano(point(0, 0, 0), vetor(1, 0, 0), vetor(1, 1, 0));
 
