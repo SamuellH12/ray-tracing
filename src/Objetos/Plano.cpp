@@ -29,6 +29,7 @@ bool has_intersection(ray r) override{
     double t = -(d/n);
     return t > 0;
 }
+
 //position // normal // color
 std::tuple<point, vetor, vetor> get_intersection(ray r) override{
     vetor D = r.get_direction();
