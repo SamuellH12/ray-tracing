@@ -16,7 +16,7 @@ public:
 plano(){}
 plano(point pos, vetor normal, vetor color) : objeto(pos, color), normal(normal) {}
 
-virtual bool has_intersection(ray r){ 
+virtual bool has_intersection(ray r, double &t){ 
     vetor D = r.get_direction();
     point O = r.get_origin();
 
@@ -26,21 +26,7 @@ virtual bool has_intersection(ray r){
 
     if(n == 0.0) return false;
     
-    double t = -(d/n);
+    t = -(d/n);
     return t > 0;
-}
-//position // normal // color
-virtual std::tuple<point, vetor, vetor> get_intersection(ray r){
-    vetor D = r.get_direction();
-    point O = r.get_origin();
-
-    vetor L = O - pos; 
-    double d = normal * L;
-    double n = normal * D;
-    
-    double t = -(d/n);
-    point inter = O + D*t;
-
-    return std::tuple(inter, normal, color);
 }
 };

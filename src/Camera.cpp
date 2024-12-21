@@ -42,7 +42,6 @@ class Camera{
     {
         v = (m - c).normalized() * -1.0;
         up = up.normalized();
-
         u = up - ( v * ((v*up) / (v*v)));
         u = u.normalized();
         w = (u % v).normalized();
@@ -51,26 +50,24 @@ class Camera{
     //retorna um vetor com as cores
     std::vector<vetor> shot(std::vector<objeto*> objetos){
         std::vector<vetor> tela;
-
-        point canto_up_lft = c + u*(v_res/2.0 - 0.5) - w*(h_res/2.0 - 0.5) - v*dist;
-
-        for(int x=0; x<v_res; x++) {
-            for(int y=0; y<h_res; y++)
+        double t;
+        for(int y=0; y<v_res; y++) {
+            for(int x=0; x<h_res; x++)
             {
-                point o = canto_up_lft + w*y - u*x;
-                ray r (c, (o - c));
+                double px = (2.0 * x / h_res - 1.0);
+                double py = (2.0 * y / v_res - 1.0);
+
+                vetor d =  w * px + u * py - v*dist;
+                ray r(c, d);
 
                 vetor color(0, 0, 0);
                 double dist = 1.0/0.0; //double INF
 
                 for(auto &obj : objetos){
-                    if(!obj->has_intersection(r)) continue;
-                    auto [inter, normal, col] = obj->get_intersection(r);
-
-                    auto d = (inter - o) * (inter - o);
-                    if(d < dist) {
-                        dist = d;
-                        color = col;
+                    if(!obj->has_intersection(r, t)) continue;
+                    if(t < dist) {
+                        dist = t;
+                        color = obj->get_color();
                     }
                 }
 
