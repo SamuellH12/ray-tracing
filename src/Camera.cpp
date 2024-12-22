@@ -1,5 +1,5 @@
 #ifndef CAMERAHEADER
-// #define CAMERAHEADER
+#define CAMERAHEADER
 #include <iostream>
 #include <math.h>
 #include "Point.cpp"
@@ -48,14 +48,14 @@ class Camera{
     }
 
     //retorna um vetor com as cores
-    std::vector<vetor> shot(std::vector<objeto*> objetos){
+    std::vector<vetor> shot(std::vector<objeto*> const &objetos){
         std::vector<vetor> tela;
         double t;
         for(int y=0; y<v_res; y++) {
             for(int x=0; x<h_res; x++)
             {
-                double px = ((2.0 *x + 1.0) / (2.0 * h_res) - 0.5);
-                double py = ((2.0 * y + 1.0) / (2.0 * v_res) - 0.5);
+                double px = ((2.0 * x + 1.0)/ (h_res) - 1);
+                double py = ((2.0 * y + 1.0)/ (v_res) - 1);
 
                 vetor d =  w * px - u * py - v*dist;
                 ray r(c, d);

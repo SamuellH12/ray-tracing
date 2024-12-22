@@ -20,13 +20,13 @@ virtual bool has_intersection(ray r, double &t){
     vetor D = r.get_direction();
     point O = r.get_origin();
 
-    vetor L = O - pos; 
+    vetor L = pos - O; 
     double d = normal * L;
     double n = normal * D;
 
     if(n == 0.0) return false;
     
-    t = -(d/n);
+    t = (d/n);
     return t > 0;
 }
 };
