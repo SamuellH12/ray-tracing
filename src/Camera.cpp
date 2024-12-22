@@ -61,7 +61,7 @@ class Camera{
         for(int y=0; y<v_res; y++) {
             for(int x=0; x<h_res; x++) {
                 point o = canto_up_lft + w*x - u*y;
-                ray r (o, (o-c).normalized());
+                ray r (c, (o-c).normalized());
 
                 vetor color = backgroud_top * ((double)(v_res - y)/(double)v_res) + backgroud_bottom * ((double)y/(double)v_res);
                 double dist = 1.0/0.0; //double INF
@@ -70,7 +70,7 @@ class Camera{
                     if(!obj->has_intersection(r)) continue;
                     auto [inter, normal, col] = obj->get_intersection(r);
 
-                    auto d = (inter - o) * (inter - o);
+                    auto d = (inter - c) * (inter - c);
                     if(d < dist) {
                         dist = d;
                         color = col;

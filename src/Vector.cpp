@@ -39,7 +39,7 @@ class vetor{
     vetor  operator* (double c) const{ return vetor(x*c, y*c, z*c); } //mult por escalar
     vetor  operator/ (double c) const{ return vetor(x/c, y/c, z/c); } //div por escalar
     vetor  operator% (vetor v) const {  return vetor(y*v.z - z*v.y, z*v.x - x*v.z, x*v.y - y*v.x); } // cross product 
-    vetor normalized(){ return *this / sqrt((*this)*(*this)); }
+    vetor normalized(){ return *this / sqrt(x*x + y*y + z*z); }
 
     //Print do vetor no formato <x, y, z>
     void print(){ std::cout << "<" << x << ", " << y << ", " << z << ">" << std::endl; }
