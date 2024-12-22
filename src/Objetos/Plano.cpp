@@ -17,30 +17,25 @@ plano(){}
 plano(point pos, vetor normal, vetor color) : objeto(pos, color), normal(normal) {}
 
 bool has_intersection(ray r) override{ 
-    vetor D = r.get_direction();
-    point O = r.get_origin();
 
-    vetor L = O - pos; 
-    double d = normal * L;
-    double n = normal * D;
-
-    if(n == 0.0) return false;
+    double n = normal * r.get_direction();
     
-    double t = -(d/n);
+    if(abs(n) <= 0.00001) return false;
+    
+    double d = normal * (pos - r.get_origin());
+    double t = (d/n);
+
     return t > 0;
 }
 
 //position // normal // color
 std::tuple<point, vetor, vetor> get_intersection(ray r) override{
-    vetor D = r.get_direction();
-    point O = r.get_origin();
 
-    vetor L = O - pos; 
-    double d = normal * L;
-    double n = normal * D;
-    
-    double t = -(d/n);
-    point inter = O + D*t;
+    double n = normal * r.get_direction();
+    double d = normal * (pos - r.get_origin());
+    double t = (d/n);
+
+    point inter = r.get_origin() + r.get_direction()*t;
 
     return std::tuple(inter, normal, color);
 }

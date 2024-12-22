@@ -32,6 +32,7 @@ class Camera{
         int v_res = 600; //vertical resolturion
         int h_res = 800; //horizontal resolution / valor padrão arbitrário
         double dist;
+        point canto_up_lft;
     
     public:
 
@@ -44,28 +45,30 @@ class Camera{
         up = up.normalized();
         u = up - ( v * ((v*up) / (v*v)));
         u = u.normalized();
-        w = (u % v).normalized();
+        w = (u % v).normalized() * -1;
+        canto_up_lft = m - w*(h_res/2.0 - 0.5) - v*dist + u*(v_res/2.0 - 0.5);
+        // u.print();
+        // v.print()        ;
+        // w.print();
     }
-
-    point canto_up_lft = c + u*(v_res/2.0 - 0.5) - w*(h_res/2.0 - 0.5) - v*dist;
 
 
     //retorna um vetor com as cores
-    std::vector<vetor> shot(std::vector<objeto> objetos){
+    std::vector<vetor> shot(std::vector<objeto*> &objetos, vetor backgroud_top = vetor(0, 0.3, 0.7), vetor backgroud_bottom = vetor(1, 1, 1)){
+        
         std::vector<vetor> tela;
         double t;
         for(int y=0; y<v_res; y++) {
-            for(int x=0; x<h_res; x++)
-            {
+            for(int x=0; x<h_res; x++) {
                 point o = canto_up_lft + w*x - u*y;
-                ray r (o, v);
+                ray r (o, (o-c).normalized());
 
-                vetor color(0, 0, 0);
+                vetor color = backgroud_top * ((double)(v_res - y)/(double)v_res) + backgroud_bottom * ((double)y/(double)v_res);
                 double dist = 1.0/0.0; //double INF
 
                 for(auto &obj : objetos){
-                    if(!obj.has_intersection(r)) continue;
-                    auto [inter, normal, col] = obj.get_intersection(r);
+                    if(!obj->has_intersection(r)) continue;
+                    auto [inter, normal, col] = obj->get_intersection(r);
 
                     auto d = (inter - o) * (inter - o);
                     if(d < dist) {

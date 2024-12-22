@@ -16,7 +16,7 @@ public:
 esfera(){}
 esfera(point pos, double raio, vetor color) : objeto(pos, color), h(raio) {}
 
-bool has_intersection(ray r) override{ 
+bool has_intersection(ray r) override { 
     vetor D = r.get_direction();
     point O = r.get_origin();
     vetor L = O - pos;
@@ -26,13 +26,13 @@ bool has_intersection(ray r) override{
 
     double dlt = b*b - 4*a*c;
 
-    if(dlt <= 0.0) return false; // < ou <= ???    
+    if(dlt <= 0.000001) return false; // < ou <= ???    
     
     double t = (-b - sqrt(dlt)) / (2.0*a);
 
     if(t < 0) t = (-b + sqrt(dlt)) / (2.0*a);
 
-    return t >= 0;
+    return t > 0;
 }
 //position // normal // color
 std::tuple<point, vetor, vetor> get_intersection(ray r) override{
