@@ -32,9 +32,9 @@ class Camera{
     }
 
     //retorna um vetor com as cores
-    std::vector<vetor> shot(std::vector<objeto*> const &objetos, vetor backgroud_top = vetor(0.3, 0.3, 0.7), vetor backgroud_bottom = vetor(1, 1, 1)){
-        std::vector<vetor> tela;
-        double t;
+    std::vector<Color> shot(std::vector<objeto*> const &objetos, vetor backgroud_top = vetor(0.3, 0.3, 0.7), vetor backgroud_bottom = vetor(1, 1, 1)){
+        std::vector<Color> tela;
+
         for(int y=0; y<v_res; y++) {
             for(int x=0; x<h_res; x++)
             {
@@ -44,20 +44,15 @@ class Camera{
                 vetor d =  w * px - u * py - v*dist;
                 ray r(c, d);
 
-                vetor color = backgroud_top * ((double)(v_res - y)/(double)v_res) + backgroud_bottom * ((double)y/(double)v_res);
-                double tmin = 1.0/0.0; //double INF
+                Intersection inter (backgroud_top * ((double)(v_res - y)/(double)v_res) + backgroud_bottom * ((double)y/(double)v_res));
                 
-                for(auto &obj : objetos){
-                    if(!obj->has_intersection(r, t)) continue;
-                    if(t < tmin) {
-                        tmin = t;
-                        color = obj->get_color();
-                    }
-                }
+                for(auto &obj : objetos)
+                    inter = min(inter, obj->get_intersection(r));
 
-                tela.push_back(color);
+                tela.push_back(inter.color);
             }
         }
+        
         return tela;
     }
 };

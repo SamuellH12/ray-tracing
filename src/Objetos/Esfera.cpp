@@ -9,29 +9,30 @@
 
 class esfera : public objeto {
 private:
-double h;
+    double h;
 
 public:
+    esfera(){}
+    esfera(point pos, double raio, Color color) : objeto(pos, color), h(raio) {}
 
-esfera(){}
-esfera(point pos, double raio, vetor color) : objeto(pos, color), h(raio) {}
+    Intersection get_intersection(ray &r) override{ 
+        vetor oc = r.get_origin() - pos;
+        double a = r.get_direction() * r.get_direction();
+        double b = 2.0 * (oc * r.get_direction());
+        double c = oc * oc - h*h;
+        double dlt = b*b - 4.0*a*c;
 
-virtual bool has_intersection(ray r, double &t){ 
-    vetor D = r.get_direction();
-    point O = r.get_origin();
-    vetor L = O - pos;
-    double a = D*D;
-    double b = 2.0*(L*D);
-    double c = L*L - h*h;
+        if(dlt < 0.0) return Intersection();
 
-    double dlt = b*b - 4*a*c;
+        double t = (-b - sqrt(dlt)) / (2.0 * a);
+        if(t < 0) t = (-b + sqrt(dlt)) / (2.0*a);
 
-    if(dlt <= 0.0) return false;    
-    
-    t = (-b - sqrt(dlt)) / (2.0*a);
+        point inter = r.get_origin() + (r.get_direction()*t);  
+        vetor normal = inter - pos;
 
-    if(t < 0) t = (-b + sqrt(dlt)) / (2.0*a);
+        double seno = (normal%r.get_direction()).norm() / (normal.norm() * (r.get_direction().norm()));
+        Color cl = color*(1.0-abs(seno));
 
-    return t >= 0;
-}
+        return t >= 0.0 ? Intersection(t, normal, cl) : Intersection();
+    }
 };

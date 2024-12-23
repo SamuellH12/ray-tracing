@@ -9,24 +9,20 @@
 
 class plano : public objeto {
 private:
-vetor normal;
+    vetor normal;
 
 public:
+    plano(){}
+    plano(point pos, vetor normal, Color color) : objeto(pos, color), normal(normal) {}
 
-plano(){}
-plano(point pos, vetor normal, vetor color) : objeto(pos, color), normal(normal) {}
+    Intersection get_intersection(ray &r) override{ 
+        double n = normal * r.get_direction();
 
-virtual bool has_intersection(ray r, double &t){ 
-    vetor D = r.get_direction();
-    point O = r.get_origin();
+        if(n == 0.0) return Intersection();
 
-    vetor L = pos - O; 
-    double d = normal * L;
-    double n = normal * D;
+        double d = normal * (pos - r.get_origin());
+        double t = (d/n);
 
-    if(n == 0.0) return false;
-    
-    t = (d/n);
-    return t > 0;
-}
+        return t >= 0.0 ? Intersection(t, normal, color) : Intersection();
+    } // point inter = r.get_origin() + r.get_direction()*t;
 };

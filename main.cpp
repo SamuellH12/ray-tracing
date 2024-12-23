@@ -5,6 +5,7 @@
 #include "src/Vector.cpp"
 #include "src/Objetos/Esfera.cpp"
 #include "src/Objetos/Plano.cpp"
+#include "src/Objetos/Tabuleiro.cpp"
 #include <vector>
 
 
@@ -13,7 +14,8 @@ int main(){
     // obj.print_faces();
     ofstream Saida("out.ppm", ios::trunc);
     point pos (-2000, 1000, 500);
-    point mira(300, 300, 0); 
+    // point mira(300, 300, 0); 
+    point mira(0, -2000, 0); 
     vetor up (0, 1, 0);
     double dist = 1.0;
     int v_res=1920;
@@ -23,7 +25,10 @@ int main(){
 
     std::vector<objeto*> objs;
     objs.emplace_back(new esfera(point(10000, -2000, -8000), 1500, vetor(1, 1, 0)));
-    objs.emplace_back(new plano(point(0, -2000, 0), vetor(0, 1, 0), vetor(0.5, 0.8, 0.5)));
+    // objs.emplace_back(new plano(point(0, -2000, 0), vetor(0, 1, 0), vetor(0.5, 0.8, 0.5)));
+    objs.emplace_back(new tabuleiro(point(0, -2000, 0), vetor(0, 1, 0), vetor(800, 0, 0), vetor(0.3, 0.8, 0.4), vetor(1, 1, 1)));
+    objs.emplace_back(new esfera(point(0, -2000, -0), 1500, vetor(1, 0, 0)));
+
 
     for(int i=0; i<3; i++)
         for(int j=0; j<3; j++)
