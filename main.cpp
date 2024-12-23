@@ -13,21 +13,21 @@ int main(){
     // objReader obj("inputs/cubo.obj");
     // obj.print_faces();
     ofstream Saida("out.ppm", ios::trunc);
-    point pos (-2000, 1000, 500);
+    point pos (1500, 800, -3500);
     // point mira(300, 300, 0); 
-    point mira(0, -2000, 0); 
-    vetor up (0, 1, 0);
-    double dist = 1.0;
-    int v_res=1920;
-    int h_res=1920;
+    point mira(300, 300, 300); 
+    vetor up (-0.5, 1, 0);
+    double dist = 0.75;
+    int v_res=1080; 1920;
+    int h_res= 1920;
 
     Camera cam(pos, mira, up, dist, v_res, h_res);
 
     std::vector<objeto*> objs;
     objs.emplace_back(new esfera(point(10000, -2000, -8000), 1500, vetor(1, 1, 0)));
-    // objs.emplace_back(new plano(point(0, -2000, 0), vetor(0, 1, 0), vetor(0.5, 0.8, 0.5)));
-    objs.emplace_back(new tabuleiro(point(0, -2000, 0), vetor(0, 1, 0), vetor(800, 0, 0), vetor(0.3, 0.8, 0.4), vetor(1, 1, 1)));
-    objs.emplace_back(new esfera(point(0, -2000, -0), 1500, vetor(1, 0, 0)));
+    objs.emplace_back(new esfera(mira, 50, vetor(1, 0, 0)));
+    objs.emplace_back(new esfera(point(1000, 0, 2000), 500, vetor(1, 0, 0)));
+    objs.emplace_back(new tabuleiro(point(0, -75, 0), vetor(0, 1, 0), vetor(100, 0, 0), vetor(0.3, 0.8, 0.4), vetor(1, 1, 1)));
 
 
     for(int i=0; i<3; i++)

@@ -34,10 +34,10 @@ public:
 
         point inter = r.get_origin() + r.get_direction()*t;
         vetor oi = inter - pos;  //origem -> interseção
-        int x = ((oi*dir) / (dir*dir)); //calcula a projeção do vetor oi na direção
-        int y = ((oi*ort) / (ort*ort));
+        int x = floor((oi*dir) / (dir*dir)); //calcula a projeção do vetor oi na direção
+        int y = floor((oi*ort) / (ort*ort));
         
-        Color cl = (abs(x%2) == abs(y%2)) ?  colorb : color;
+        Color cl = (abs(x)%2 == abs(y)%2) ?  colorb : color;
 
         return Intersection(t, normal, cl);
     }
