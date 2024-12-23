@@ -15,8 +15,7 @@ ok subtração de vetores -> vetor
 ok mult por escalar -> vetor
 ok div por escalar -> vetor
 ok produto interno -> escalar
-Get perpendicular to vector
-get perpendicular to plane
+ok produto vetorial -> vetor
 */
 class point;
 

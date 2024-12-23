@@ -7,22 +7,6 @@
 #include "Ray.cpp"
 #include "Objetos/Objeto.cpp"
 
-/*
-Classe de vetores.
-A classe precisa ser instanciada passando as componentes x, y e z
-*/
-/*
-Operações a implementar:
-ok Soma de vetores -> vetor
-ok subtração de vetores -> vetor
-ok mult por escalar -> vetor
-ok div por escalar -> vetor
-ok produto interno -> escalar
-Get perpendicular to vector
-get perpendicular to plane
-*/
-
-
 class Camera{
     private:
         point c; //position

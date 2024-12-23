@@ -3,16 +3,10 @@
 #include "src/ObjReader.cpp"
 #include "src/Camera.cpp"
 #include "src/Vector.cpp"
-// #include "src/Objetos/Objeto.cpp"
 #include "src/Objetos/Esfera.cpp"
 #include "src/Objetos/Plano.cpp"
 #include <vector>
 
-/*
-
-Divirtam-se :)
-
-*/
 
 int main(){
     // objReader obj("inputs/cubo.obj");
@@ -30,7 +24,6 @@ int main(){
     std::vector<objeto*> objs;
     objs.emplace_back(new esfera(point(10000, -2000, -8000), 1500, vetor(1, 1, 0)));
     objs.emplace_back(new plano(point(0, -2000, 0), vetor(0, 1, 0), vetor(0.5, 0.8, 0.5)));
-    // objs.emplace_back(new tabuleiro(point(0, -2000, 0), vetor(0, 1, 0), vetor(800, 0, 0), vetor(0.3, 0.8, 0.4), vetor(1, 1, 1)));
 
     for(int i=0; i<3; i++)
         for(int j=0; j<3; j++)
@@ -45,9 +38,8 @@ int main(){
     
     Saida.close();
 
-    for(objeto* obj: objs) {
+    for(objeto* obj: objs)
         delete obj;
-    }
     objs.clear();
 
     string command = "py convert_ppm.py";

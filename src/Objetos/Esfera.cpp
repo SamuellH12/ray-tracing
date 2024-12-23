@@ -26,7 +26,7 @@ virtual bool has_intersection(ray r, double &t){
 
     double dlt = b*b - 4*a*c;
 
-    if(dlt <= 0.0) return false; // < ou <= ???    
+    if(dlt <= 0.0) return false;    
     
     t = (-b - sqrt(dlt)) / (2.0*a);
 

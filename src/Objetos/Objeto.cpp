@@ -19,7 +19,6 @@ objeto(){}
 objeto(point pos, vetor color) : pos(pos), color(color) {}
 
 virtual bool has_intersection(ray r, double &t) = 0;
-//position // normal // color
 
 vetor get_color() {return color;}
 

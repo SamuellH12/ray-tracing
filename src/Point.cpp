@@ -9,9 +9,9 @@ A classe precisa ser instanciada passando as componentes x, y e z
 */
 /*
 Operações com pontos
-ok diferença -> vetor
+ok diferença de pontos -> vetor
 ok soma com vetor -> pt
-ok sub vetor pt -> pt
+ok subtração com vetor -> pt
 */
 
 class point{
