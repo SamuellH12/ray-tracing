@@ -29,7 +29,8 @@ int main(){
 
     std::vector<objeto*> objs;
     objs.emplace_back(new esfera(point(10000, -2000, -8000), 1500, vetor(1, 1, 0)));
-    objs.emplace_back(new plano(point(0, -2000, 0), vetor(0, 1, 0), vetor(1, 1, 1)));
+    objs.emplace_back(new plano(point(0, -2000, 0), vetor(0, 1, 0), vetor(0.5, 0.8, 0.5)));
+    // objs.emplace_back(new tabuleiro(point(0, -2000, 0), vetor(0, 1, 0), vetor(800, 0, 0), vetor(0.3, 0.8, 0.4), vetor(1, 1, 1)));
 
     for(int i=0; i<3; i++)
         for(int j=0; j<3; j++)
@@ -43,5 +44,9 @@ int main(){
         Saida << (int)(v.getX()*255) << " " << (int)(v.getY()*255) << " " << (int)(v.getZ()*255) << endl;
     
     Saida.close();
+
+    string command = "py convert_ppm.py";
+    system(command.c_str());
+
     return 0;
 }

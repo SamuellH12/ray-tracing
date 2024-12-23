@@ -48,7 +48,7 @@ class Camera{
     }
 
     //retorna um vetor com as cores
-    std::vector<vetor> shot(std::vector<objeto*> const &objetos){
+    std::vector<vetor> shot(std::vector<objeto*> const &objetos, vetor backgroud_top = vetor(0.3, 0.3, 0.7), vetor backgroud_bottom = vetor(1, 1, 1)){
         std::vector<vetor> tela;
         double t;
         for(int y=0; y<v_res; y++) {
@@ -60,7 +60,7 @@ class Camera{
                 vetor d =  w * px - u * py - v*dist;
                 ray r(c, d);
 
-                vetor color(0, 0, 0);
+                vetor color = backgroud_top * ((double)(v_res - y)/(double)v_res) + backgroud_bottom * ((double)y/(double)v_res);
                 double dist = 1.0/0.0; //double INF
 
                 for(auto &obj : objetos){
