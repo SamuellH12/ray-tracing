@@ -45,6 +45,11 @@ int main(){
     
     Saida.close();
 
+    for(objeto* obj: objs) {
+        delete objs;
+    }
+    objs.clear();
+    
     string command = "py convert_ppm.py";
     system(command.c_str());
 

@@ -61,12 +61,12 @@ class Camera{
                 ray r(c, d);
 
                 vetor color = backgroud_top * ((double)(v_res - y)/(double)v_res) + backgroud_bottom * ((double)y/(double)v_res);
-                double dist = 1.0/0.0; //double INF
-
+                double tmin = 1.0/0.0; //double INF
+                
                 for(auto &obj : objetos){
                     if(!obj->has_intersection(r, t)) continue;
-                    if(t < dist) {
-                        dist = t;
+                    if(t < tmin) {
+                        tmin = t;
                         color = obj->get_color();
                     }
                 }
