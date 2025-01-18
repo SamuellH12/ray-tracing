@@ -19,3 +19,7 @@ add_executable(main main.cpp)
 # target_compile_features(main PRIVATE cxx_std_17)
 target_link_libraries(main PRIVATE SFML::Graphics)
 
+# add_compile_options(-fopenmp)
+message(STATUS, "CXXFLAGS: ${CMAKE_CXX_FLAGS}")
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -fopenmp" )
+message(STATUS, "CXXFLAGS: ${CMAKE_CXX_FLAGS}")
