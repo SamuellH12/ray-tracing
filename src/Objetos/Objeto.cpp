@@ -34,4 +34,7 @@ public:
     objeto(point pos, vetor color) : pos(pos), color(color) {}
 
     virtual Intersection get_intersection(ray &r){ return Intersection(); }
+
+    point get_pos(){ return pos; }
+    void  set_pos(point p){ this->pos = p; }
 };

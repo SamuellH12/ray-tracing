@@ -31,6 +31,57 @@ class Camera{
         w = (v % u).normalized();
     }
 
+    void move(vetor delta){
+        c = c + delta;
+        m = m + delta;
+    }
+    void set_position(point pos){
+        m = m + (pos-c);
+        c = pos;
+    }
+    void set_dist(double d){ dist = d; m = c + v * (-dist); }
+    double get_dist() const { return dist; }
+
+    point get_pos() const { return c; }
+    vetor get_u() const { return u; } //y axis
+    vetor get_v() const { return v; } //x axis
+    vetor get_w() const { return w; } //z axis
+
+    void rotatex(double theta) {
+        u = u.rotatex(theta);
+        v = v.rotatex(theta);
+        w = w.rotatex(theta);
+        m = c + v * (-dist);
+    }
+    void rotatey(double theta) {
+        u = u.rotatey(theta);
+        v = v.rotatey(theta);
+        w = w.rotatey(theta);
+        m = c + v * (-dist);
+    }
+    void rotatez(double theta) {
+        u = u.rotatez(theta);
+        v = v.rotatez(theta);
+        w = w.rotatez(theta);
+        m = c + v * (-dist);
+    }
+
+    void rotateu(double theta) {
+        v = v.rotateAroundAxis(u, theta);
+        w = w.rotateAroundAxis(u, theta);
+        m = c + v * (-dist);
+    }
+    void rotatev(double theta) {
+        u = u.rotateAroundAxis(v, theta);
+        w = w.rotateAroundAxis(v, theta);
+        m = c + v * (-dist);
+    }
+    void rotatew(double theta) {
+        u = u.rotateAroundAxis(w, theta);
+        v = v.rotateAroundAxis(w, theta);
+        m = c + v * (-dist);
+    }
+
     //retorna um vetor com as cores
     std::vector<Color> shot(std::vector<objeto*> const &objetos, vetor backgroud_top = vetor(0.3, 0.3, 0.7), vetor backgroud_bottom = vetor(1, 1, 1)){
         std::vector<Color> tela(v_res*h_res);

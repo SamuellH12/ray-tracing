@@ -16,9 +16,9 @@ ok subtração com vetor -> pt
 
 class point{
     private:
-        double x;
-        double y;
-        double z;
+        double x = 0;
+        double y = 0;
+        double z = 0;
 public:
 
     //Construtores
