@@ -11,16 +11,18 @@
 Pra rodar o cmake:
 
 ```
-mkdir build 
-cd .\build\ 
-cmake -G "MinGW Makefiles" ..
-```
-
-After: <code> cd .. </code>
-
-```
+   mkdir build 
+   cd .\build\ 
+   cmake -G "MinGW Makefiles" ..
+   cd ..
    cmake -B build
+```
+
+After it you can build and run the program with this:
+
+```
    cmake --build build
+   .\build\bin\main.exe
 ```
 
 <hr>

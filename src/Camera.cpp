@@ -83,7 +83,7 @@ class Camera{
     }
 
     //retorna um vetor com as cores
-    std::vector<Color> shot(std::vector<objeto*> const &objetos, vetor backgroud_top = vetor(0.3, 0.3, 0.7), vetor backgroud_bottom = vetor(1, 1, 1)){
+    std::vector<Color> shot(std::vector<objeto*> const &objetos, vetor backgroud_top = vetor(0.25, 0.25, 1), vetor backgroud_bottom = vetor(1, 1, 1)){
         std::vector<Color> tela(v_res*h_res);
 
         double pixel_unit = 1.0 / h_res;
@@ -95,10 +95,11 @@ class Camera{
                 point tl = c - v*dist   +  u*(pixel_unit*(v_res/2.0 - y - 0.5))  -  w*(pixel_unit*(h_res/2.0 - x - 0.5));
                 ray r(c, (tl-c));
 
-                Intersection inter (backgroud_top * ((double)(v_res - y)/(double)v_res) + backgroud_bottom * ((double)y/(double)v_res));
+                double seno = ( 1.0 + r.get_direction().getY() ) / 2.0; // calcula o ângulo pra usar como porcentagem da cor do ceu 
+                Intersection inter (backgroud_top * (seno) + backgroud_bottom * (1.0-seno));
                 
                 for(auto &obj : objetos)
-                    inter = min(inter, obj->get_intersection(r));
+                    inter = std::min(inter, obj->get_intersection(r));
 
                 tela[x + y*h_res] = inter.color;
             }

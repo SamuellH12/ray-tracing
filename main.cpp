@@ -6,19 +6,41 @@
 #include "src/Objetos/Esfera.cpp"
 #include "src/Objetos/Plano.cpp"
 #include "src/Objetos/Tabuleiro.cpp"
+#include "src/Objetos/Cilindro.cpp"
 #include <vector>
 #include <set>
 #include <SFML/Graphics.hpp>
 #define WIDTH  (640) //(640 / 10)
 #define HEIGHT (360) //(360 / 10) 
 
+const double PI = acos(-1);
 
 std::vector<objeto*> get_scene(){
     std::vector<objeto*> objs;
     // objs.emplace_back(new esfera(point(10000, -2000, -8000), 1500, vetor(1, 1, 0)));
-    objs.emplace_back(new esfera(point(1000, 0, 2000), 500, vetor(1, 0, 0)));
+    objs.emplace_back(new esfera(point(700, 0, 1700), 500, vetor(1, 0, 0)));
     objs.emplace_back(new tabuleiro(point(0, -75, 0), vetor(0, 1, 0), vetor(100, 0, 0), vetor(0.3, 0.8, 0.4), vetor(1, 1, 1)));
+    
+    objs.emplace_back(new cilindro(point(1500, 50, 1200), vetor(5, 10, 5) * 100.0, 80, Color(0.8, 0.7, 0.2)));
 
+    //cubo
+    point cpos(1500, 0, 300);
+    double csz = 500;
+    double cr = 50;
+    Color ccl (0.8, 0.3, 0.6);
+    vetor nxt(csz, 0, 0);
+    bool preenchido = false;
+
+    for(int j=0; j<2; j++){
+        for(int i=0; i<4; i++){
+            objs.emplace_back(new cilindro(cpos, cpos+nxt, cr, ccl, preenchido));
+            cpos = cpos+nxt;
+            nxt = nxt.rotatey(PI/2.0);
+            if(!j) objs.emplace_back(new cilindro(cpos, cpos + vetor(0, csz, 0) , cr, ccl, preenchido));
+        }
+
+        cpos = cpos + vetor(0, csz, 0);
+    }
 
     for(int i=0; i<3; i+=1)
         for(int j=0; j<3; j+=2)
@@ -30,7 +52,6 @@ std::vector<objeto*> get_scene(){
     return objs;
 };
 
-const double PI = acos(-1);
 const double scale_down = 0.6;
 const double EPS = 0.0001;
 
@@ -110,8 +131,6 @@ void handle_events(sf::RenderWindow &window){
         { 
             
         }
-        // else if(const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){ activeKeys.insert(keyPressed->code); }
-        // else if(const auto* keyReleased= event->getIf<sf::Event::KeyReleased>()){ activeKeys.erase(keyReleased->code); }
     }
 }
 
