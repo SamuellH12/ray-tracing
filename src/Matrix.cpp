@@ -30,12 +30,19 @@ template<int H=4, int W=4> class matrix {
   template<int HH, int WW>
   matrix<H, WW> operator * (const matrix<HH, WW> & t) const {
     static_assert(W == HH, "Matrix dimensions do not match");
-    matrix<H, WW> a;
+    matrix<H, WW> a {};
 
     for(int i=0; i<H; i++)
       for(int j=0; j<WW; j++)
         for(int k=0; k<W; k++)
           a[i][j] += m[i][k] * t[k][j];
+
+    this->print();
+    std::cout << "****\n";
+    t.print();
+    std::cout << "===\n";
+    a.print();
+    std::cout << "---\n";
 
     return a;
   }
@@ -50,7 +57,10 @@ template<int H=4, int W=4> class matrix {
     for(int i=3; i < W; i++) p[i][0] = 1;
 
     p = (*this) * p;
+    
+    auto w = p[3][0];
 
+    // return point(p[0][0] / w, p[1][0] / w, p[2][0] / w);
     return point(p[0][0], p[1][0], p[2][0]);
   }
 
@@ -66,11 +76,11 @@ template<int H=4, int W=4> class matrix {
     return vetor(p[0][0], p[1][0], p[2][0]);
   }
 
-  void print(){
+  const void print() const {
     for(int i=0; i<H; i++){
       for(int j=0; j<W; j++)
         std::cout << (*this)[i][j] << " ";
-      std::cout << "\n";
+      if(W > 1 || i == H-1) std::cout << "\n";
     }
   }
 
@@ -89,24 +99,30 @@ matrix<4, 4> MatrixZRotation(double theta){
 
 const double PI = acos(-1);
 
-// int main(){
+int main(){
+  std::cout << std::fixed << std::setprecision(8);
 
-//   double theta = PI;
+  matrix<4, 4> m ({
+    {10, 0, 0, 0},
+    {0, -2, 0, 0},
+    {0, 0, 6, 0},
+    {0, 0, 0,  1}
+  });
+  auto r = MatrixZRotation(PI/4);
+    
+  auto a = m * r ;
 
-//   matrix<4, 4> t ({
-//     {cos(theta), -sin(theta), 0, 1},
-//     {sin(theta), cos(theta), 0, 1},
-//     {0, 0, 1, 3},
-//     {0, 0, 0, 1}
-//   });
+  point p (1, 2, 3);
 
-//   auto a = t * point(1, 1, 1);
+  (a * p).print();
 
-//   std::cout << std::fixed << std::setprecision(4);
-//   a.print();
+  std::cout << "-------\n";
+  std::cout << "-------\n";
 
-// return 0;
-// }
+  (m * (r * p)).print();
+
+  return 0;
+}
 
 
 /*

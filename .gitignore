@@ -16,3 +16,8 @@ cmake-build-*/
 *.ppm
 *.exe
 *.out
+
+#Pasta do CMake
+build
+build/_deps
+_deps

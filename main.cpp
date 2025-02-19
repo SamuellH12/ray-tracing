@@ -38,17 +38,17 @@ int main(){
 
     // matrizes de operadores afins
     matrix<4, 4> m ({
-        {10, 0, 0, 0},
-        {0, -2, 0, 0},
-        {0, 0, 6, 0},
-        {0, 0, 0,  1},
+        {1, 0, 0, 2},
+        {0, 1, 0, 2},
+        {0, 0, 1, 2},
+        {0, 0, 0, 1},
     });
     auto r = MatrixZRotation(PI/4);
 
 
     /*************************************/
     // Adicionar objetos na cena
-    objs.emplace_back(new tabuleiro(point(0, -1, 0), vetor(0, 1, 0), vetor(1, 0, 0), vetor(0.3, 0.8, 0.4), vetor(1, 1, 1)));
+    // objs.emplace_back(new tabuleiro(point(0, -1, 0), vetor(0, 1, 0), vetor(1, 0, 0), vetor(0.3, 0.8, 0.4), vetor(1, 1, 1)));
     
     objReader obj("inputs/cubo.obj");
     auto cubo = new malha(obj);
@@ -64,17 +64,24 @@ int main(){
     /*************************************/
     // Capturar imagem
 
-    generate_img();
+    // generate_img();
+    
     auto x = m*r;
+    // cubo->affine_transform(x);
+    cubo->affine_transform(r);
+    cubo->affine_transform(m);
+    
+    m.print();
+    std::cout << "---\n";
+    r.print();
+    std::cout << "---\n";
     x.print();
-    cubo->affine_transform(x);
+
+
     generate_img();
+    
     // cubo->affine_transform(r);
     // generate_img();
-
-
-
-
     
     // deletar objetos?
     for(objeto* obj: objs) delete obj;
