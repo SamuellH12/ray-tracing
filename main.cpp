@@ -8,12 +8,12 @@
 #include "src/Objetos/Tabuleiro.cpp"
 #include "src/Objetos/Malha.cpp"
 #include <vector>
-point pos (15, 0, 15);
+point pos (0, 5, 15);
 point mira(0, 0, 0); 
-vetor up (-0.5, 1, 0);
+vetor up (0, 1, 0);
 double dist = 0.75;
-const int v_res=1080/5;
-const int h_res= 1920/5;
+const int v_res=1080/10;
+const int h_res= 1920/10;
 
 Camera cam(pos, mira, up, dist, v_res, h_res);
 std::vector<objeto*> objs;
@@ -46,7 +46,7 @@ int main(){
     });
     matrix<4, 4> translacao ({
         {1, 0, 0, 0},
-        {0, 1, 0, -5},
+        {0, 1, 0, -10},
         {0, 0, 1, 0},
         {0, 0, 0,  1},
     });
@@ -67,8 +67,8 @@ int main(){
     objReader obj2("inputs/cubo2.obj");
     auto cubo = new malha(obj);
     auto cubo2 = new malha(obj2);
-    // objs.emplace_back( cubo );
-    // objs.emplace_back( cubo2 );
+    objs.emplace_back( cubo );
+    objs.emplace_back( cubo2 );
     
     objReader objm("inputs/monkey.obj");
     auto macaco = new malha(objm);
@@ -80,10 +80,10 @@ int main(){
     // Capturar imagem
 
     cubo2->affine_transform(translacao);
-    generate_img();
-    
     // cubo->affine_transform(m);
     // cubo->affine_transform(r);
+    generate_img();
+    
     
     auto x = r * m;
     // cubo2->affine_transform(x);

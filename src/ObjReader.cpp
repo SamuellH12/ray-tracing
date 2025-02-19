@@ -109,7 +109,10 @@ public:
                 char slash;
                 for (int i = 0; i < 3; ++i) {
                     int _;
-                    iss >> face.verticeIndice[i] >> slash >> slash >> face.normalIndice[i];
+                    iss >> face.verticeIndice[i] >> slash;
+                    iss >> slash;  // cuiadado com o caso 1//1  em que o número do meio está faltando
+                    while(slash != '/') iss >> slash;
+                    iss >> face.normalIndice[i];
                     face.ka = curMaterial.ka;
                     face.kd = curMaterial.kd;
                     face.ks = curMaterial.ks;
