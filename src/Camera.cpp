@@ -54,6 +54,7 @@ class Camera{
 
                 tela.push_back(inter.color);
             }
+            std::cout << (y+1.0) / v_res * 100.0 << "%\r";
         }
 
         return tela;

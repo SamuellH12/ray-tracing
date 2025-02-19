@@ -109,7 +109,7 @@ public:
                 char slash;
                 for (int i = 0; i < 3; ++i) {
                     int _;
-                    iss >> face.verticeIndice[i] >> slash >> _ >> slash >> face.normalIndice[i];
+                    iss >> face.verticeIndice[i] >> slash >> slash >> face.normalIndice[i];
                     face.ka = curMaterial.ka;
                     face.kd = curMaterial.kd;
                     face.ks = curMaterial.ks;

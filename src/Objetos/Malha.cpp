@@ -40,8 +40,12 @@ private:
         if( ((c-b) % (i - b)) * normal < 0 ) return Intersection();
         if( ((a-c) % (i - c)) * normal < 0 ) return Intersection();
 
+        vetor view = (r.get_origin() - i).normalized();
+
+        Color cl = color * std::max(0.0, normal * view);
+
         //a intersecao esta dentro do triangulo
-        return Intersection(t, normal, color);
+        return Intersection(t, normal, cl);
     }
 
 public:

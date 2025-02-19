@@ -31,20 +31,15 @@ template<int H=4, int W=4> class matrix {
   matrix<H, WW> operator * (const matrix<HH, WW> & t) const {
     static_assert(W == HH, "Matrix dimensions do not match");
     matrix<H, WW> a;
+
     for(int i=0; i<H; i++)
       for(int j=0; j<WW; j++)
           a[i][j] = 0;
+
     for(int i=0; i<H; i++)
       for(int j=0; j<WW; j++)
         for(int k=0; k<W; k++)
           a[i][j] += m[i][k] * t[k][j];
-
-    this->print();
-    std::cout << "****\n";
-    t.print();
-    std::cout << "===\n";
-    a.print();
-    std::cout << "---\n";
 
     return a;
   }
@@ -59,10 +54,7 @@ template<int H=4, int W=4> class matrix {
     for(int i=3; i < W; i++) p[i][0] = 1;
 
     p = (*this) * p;
-    
-    auto w = p[3][0];
-
-    // return point(p[0][0] / w, p[1][0] / w, p[2][0] / w);
+  
     return point(p[0][0], p[1][0], p[2][0]);
   }
 
@@ -99,39 +91,5 @@ matrix<4, 4> MatrixZRotation(double theta){
   return t;
 }
 
-const double PI = acos(-1);
-
-int main(){
-  std::cout << std::fixed << std::setprecision(8);
-
-  matrix<4, 4> m ({
-    {10, 0, 0, 0},
-    {0, -2, 0, 0},
-    {0, 0, 6, 0},
-    {0, 0, 0,  1}
-  });
-  auto r = MatrixZRotation(PI/4);
-    
-  auto a = m * r ;
-
-  point p (1, 2, 3);
-
-  (a * p).print();
-
-  std::cout << "-------\n";
-  std::cout << "-------\n";
-
-  (m * (r * p)).print();
-
-  return 0;
-}
-
-
-/*
-
-M * P
-P * M
-
-*/
-
+// const double PI = acos(-1);
 #endif
