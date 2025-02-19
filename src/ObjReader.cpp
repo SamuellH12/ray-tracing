@@ -196,6 +196,9 @@ public:
         return vertices;
     }
 
+    std::vector<vetor> getNormals() {
+        return normals;
+    }
 
     // Emite um output no terminal para cada face, com seus respectivos pontos (x, y, z)
     void print_faces() {

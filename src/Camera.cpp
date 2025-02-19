@@ -50,7 +50,7 @@ class Camera{
                 Intersection inter (backgroud_top * ((double)(v_res - y)/(double)v_res) + backgroud_bottom * ((double)y/(double)v_res));
                 
                 for(auto &obj : objetos)
-                    inter = min(inter, obj->get_intersection(r));
+                    inter = min<Intersection>(inter, obj->get_intersection(r));
 
                 tela.push_back(inter.color);
             }
