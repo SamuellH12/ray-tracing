@@ -30,8 +30,10 @@ template<int H=4, int W=4> class matrix {
   template<int HH, int WW>
   matrix<H, WW> operator * (const matrix<HH, WW> & t) const {
     static_assert(W == HH, "Matrix dimensions do not match");
-    matrix<H, WW> a {};
-
+    matrix<H, WW> a;
+    for(int i=0; i<H; i++)
+      for(int j=0; j<WW; j++)
+          a[i][j] = 0;
     for(int i=0; i<H; i++)
       for(int j=0; j<WW; j++)
         for(int k=0; k<W; k++)
@@ -47,7 +49,7 @@ template<int H=4, int W=4> class matrix {
     return a;
   }
 
-  point operator* (const point pt) const {
+  point operator* (point pt) const {
     matrix<W, 1> p;
     
     p[0][0] = pt.getX();
