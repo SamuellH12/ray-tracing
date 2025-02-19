@@ -12,8 +12,8 @@ point pos (0, 5, 15);
 point mira(0, 0, 0); 
 vetor up (0, 1, 0);
 double dist = 0.75;
-const int v_res=1080/10;
-const int h_res= 1920/10;
+const int v_res=1080/2;
+const int h_res= 1920/2;
 
 Camera cam(pos, mira, up, dist, v_res, h_res);
 std::vector<objeto*> objs;
@@ -61,7 +61,7 @@ int main(){
 
     /*************************************/
     // Adicionar objetos na cena
-    // objs.emplace_back(new tabuleiro(point(0, -7, 0), vetor(0, 1, 0), vetor(1, 0, 0), vetor(0.3, 0.8, 0.4), vetor(1, 1, 1)));
+    objs.emplace_back(new tabuleiro(point(0, -7, 0), vetor(0, 1, 0), vetor(1, 0, 0), vetor(0.3, 0.8, 0.4), vetor(1, 1, 1)));
     
     objReader obj("inputs/cubo.obj");
     objReader obj2("inputs/cubo2.obj");
@@ -76,6 +76,10 @@ int main(){
     macaco->affine_transform(m);
 
 
+    // cubo->get_centroid().print();
+    // ray raio (pos, cubo->get_centroid() - pos);
+    // std::cout << cubo->get_intersection(raio).dist << "\n";
+
     /*************************************/
     // Capturar imagem
 
@@ -85,7 +89,7 @@ int main(){
     generate_img();
     
     
-    auto x = r * m;
+    // auto x = r * m;
     // cubo2->affine_transform(x);
     
     // generate_img();
