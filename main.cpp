@@ -12,8 +12,8 @@ point pos (0, 5, 15);
 point mira(0, 0, 0); 
 vetor up (0, 1, 0);
 double dist = 0.75;
-const int v_res=1080/2;
-const int h_res= 1920/2;
+const int v_res=1080;
+const int h_res= 1920;
 
 Camera cam(pos, mira, up, dist, v_res, h_res);
 std::vector<objeto*> objs;
