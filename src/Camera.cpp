@@ -99,10 +99,11 @@ class Camera{
                 Intersection inter (backgroud_top * (seno) + backgroud_bottom * (1.0-seno));
                 
                 for(auto &obj : objetos)
-                    inter = std::min(inter, obj->get_intersection(r));
+                    inter = std::min<Intersection>(inter, obj->get_intersection(r));
 
                 tela[x + y*h_res] = inter.color;
             }
+            // std::cout << (y+1.0) / v_res * 100.0 << "%\r";
         }
 
         return tela;

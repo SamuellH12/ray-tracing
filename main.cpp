@@ -211,3 +211,13 @@ int main(){
 
     return 0;
 }
+
+/*** OBJETOS DE TESTE
+    objs.emplace_back(new esfera(point(10000, -2000, -8000), 1500, vetor(1, 1, 0)));
+    objs.emplace_back(new esfera(mira, 50, vetor(1, 0, 0)));
+    objs.emplace_back(new esfera(point(1000, 0, 2000), 500, vetor(1, 0, 0)));
+    for(int i=0; i<3; i++)
+        for(int j=0; j<3; j++)
+            for(int k=0; k<3; k++)
+                objs.emplace_back(new esfera(point(i*300, j*300, k*300), 75 , vetor(0.5*i, 0.5*j, 0.5*k)));
+*/

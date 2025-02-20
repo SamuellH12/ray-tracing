@@ -42,6 +42,7 @@ struct Face {
     vetor kd;
     vetor ks;
     vetor ke;
+    vetor normal;
     double ns;
     double ni;
     double d;
@@ -58,6 +59,12 @@ struct Face {
         ns = 0.0;
         ni = 0.0;
         d = 0.0;
+    }
+
+    void recalc_normal(std::vector<point> &vertices){
+        normal = (vertices[verticeIndice[1]] - vertices[verticeIndice[0]]) % 
+                 (vertices[verticeIndice[2]] - vertices[verticeIndice[0]]);
+        normal = normal.normalized();
     }
 };
 
@@ -109,7 +116,10 @@ public:
                 char slash;
                 for (int i = 0; i < 3; ++i) {
                     int _;
-                    iss >> face.verticeIndice[i] >> slash >> _ >> slash >> face.normalIndice[i];
+                    iss >> face.verticeIndice[i] >> slash;
+                    iss >> slash;  // cuiadado com o caso 1//1  em que o número do meio está faltando
+                    while(slash != '/') iss >> slash;
+                    iss >> face.normalIndice[i];
                     face.ka = curMaterial.ka;
                     face.kd = curMaterial.kd;
                     face.ks = curMaterial.ks;
@@ -120,6 +130,7 @@ public:
                     face.verticeIndice[i]--;
                     face.normalIndice[i]--;
                 }
+                face.recalc_normal(vertices);
                 faces.push_back(face);
             }
 
@@ -196,6 +207,9 @@ public:
         return vertices;
     }
 
+    std::vector<vetor> getNormals() {
+        return normals;
+    }
 
     // Emite um output no terminal para cada face, com seus respectivos pontos (x, y, z)
     void print_faces() {
