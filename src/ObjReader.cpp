@@ -42,6 +42,7 @@ struct Face {
     vetor kd;
     vetor ks;
     vetor ke;
+    vetor normal;
     double ns;
     double ni;
     double d;
@@ -58,6 +59,12 @@ struct Face {
         ns = 0.0;
         ni = 0.0;
         d = 0.0;
+    }
+
+    void recalc_normal(std::vector<point> &vertices){
+        normal = (vertices[verticeIndice[1]] - vertices[verticeIndice[0]]) % 
+                 (vertices[verticeIndice[2]] - vertices[verticeIndice[0]]);
+        normal = normal.normalized();
     }
 };
 
@@ -123,6 +130,7 @@ public:
                     face.verticeIndice[i]--;
                     face.normalIndice[i]--;
                 }
+                face.recalc_normal(vertices);
                 faces.push_back(face);
             }
 

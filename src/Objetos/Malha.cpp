@@ -20,9 +20,7 @@ private:
     Intersection get_face_intersection(int id_face, ray &r){
         Face &f = faces[id_face];
         point &a = vertices[f.verticeIndice[0]];
-        point &b = vertices[f.verticeIndice[1]];
-        point &c = vertices[f.verticeIndice[2]];
-        vetor normal = ((b-a) % (c-a)).normalized();
+        vetor normal = f.normal;
 
         double n = normal * r.get_direction();
 
@@ -36,13 +34,15 @@ private:
         //a intersecao esta dentro do triangulo?
 
         point i = r.get_origin() + r.get_direction() * t;
+        point &b = vertices[f.verticeIndice[1]];
+        point &c = vertices[f.verticeIndice[2]];
 
         if( ((b-a) % (i - a)) * normal < 0 ) return Intersection();
         if( ((c-b) % (i - b)) * normal < 0 ) return Intersection();
         if( ((a-c) % (i - c)) * normal < 0 ) return Intersection();
 
 
-        Color cl = color * std::max(0.0, normal * (r.get_origin() - i).normalized());
+        Color cl = color * max(0.0, min(normal * r.get_direction() * -1.0 + 0.15, 1.0));
         return Intersection(t, normal, cl);
     }
 
@@ -86,6 +86,7 @@ public:
     void affine_transform(matrix<4, 4> m){
         for(auto &p : vertices) p = m * p;
         for(auto &v : normals)  v = m * v;
+        for(auto &f : faces) f.recalc_normal(vertices);
         calc_tree();
         calc_centroid();
     }
