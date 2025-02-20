@@ -91,7 +91,7 @@ class Camera{
         #pragma omp parallel for
         for(int y=0; y<v_res; y++) {
             for(int x=0; x<h_res; x++)
-            {                
+            {
                 point tl = c - v*dist   +  u*(pixel_unit*(v_res/2.0 - y - 0.5))  -  w*(pixel_unit*(h_res/2.0 - x - 0.5));
                 ray r(c, (tl-c));
 

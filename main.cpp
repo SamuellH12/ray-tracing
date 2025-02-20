@@ -7,55 +7,103 @@
 #include "src/Objetos/Plano.cpp"
 #include "src/Objetos/Tabuleiro.cpp"
 #include "src/Objetos/Cilindro.cpp"
+#include "src/Objetos/Malha.cpp"
 #include <vector>
 #include <set>
 #include <SFML/Graphics.hpp>
-#define WIDTH  (640) //(640 / 10)
-#define HEIGHT (360) //(360 / 10) 
+#define WIDTH  (400) //(640 / 10)
+#define HEIGHT (250) //(360 / 10) 
 
 const double PI = acos(-1);
 
 std::vector<objeto*> get_scene(){
     std::vector<objeto*> objs;
     // objs.emplace_back(new esfera(point(10000, -2000, -8000), 1500, vetor(1, 1, 0)));
-    objs.emplace_back(new esfera(point(700, 0, 1700), 500, vetor(1, 0, 0)));
-    objs.emplace_back(new tabuleiro(point(0, -75, 0), vetor(0, 1, 0), vetor(100, 0, 0), vetor(0.3, 0.8, 0.4), vetor(1, 1, 1)));
+    // objs.emplace_back(new esfera(point(700, 0, 1700), 500, vetor(1, 0, 0)));
+    objs.emplace_back(new tabuleiro(point(0, -10, 0), vetor(0, 1, 0), vetor(1, 0, 0), vetor(0.3, 0.8, 0.4), vetor(1, 1, 1)));
     
-    objs.emplace_back(new cilindro(point(1500, 50, 1200), vetor(5, 10, 5) * 100.0, 80, Color(0.8, 0.7, 0.2)));
+    // objs.emplace_back(new cilindro(point(1500, 50, 1200), vetor(5, 10, 5) * 100.0, 80, Color(0.8, 0.7, 0.2)));
 
-    //cubo
-    point cpos(1500, 0, 300);
-    double csz = 500;
-    double cr = 50;
-    Color ccl (0.8, 0.3, 0.6);
-    vetor nxt(csz, 0, 0);
-    bool preenchido = false;
+    // //cubo
+    // point cpos(1500, 0, 300);
+    // double csz = 500;
+    // double cr = 50;
+    // Color ccl (0.8, 0.3, 0.6);
+    // vetor nxt(csz, 0, 0);
+    // bool preenchido = false;
 
-    for(int j=0; j<2; j++){
-        for(int i=0; i<4; i++){
-            objs.emplace_back(new cilindro(cpos, cpos+nxt, cr, ccl, preenchido));
-            cpos = cpos+nxt;
-            nxt = nxt.rotatey(PI/2.0);
-            if(!j) objs.emplace_back(new cilindro(cpos, cpos + vetor(0, csz, 0) , cr, ccl, preenchido));
-        }
+    // for(int j=0; j<2; j++){
+    //     for(int i=0; i<4; i++){
+    //         objs.emplace_back(new cilindro(cpos, cpos+nxt, cr, ccl, preenchido));
+    //         cpos = cpos+nxt;
+    //         nxt = nxt.rotatey(PI/2.0);
+    //         if(!j) objs.emplace_back(new cilindro(cpos, cpos + vetor(0, csz, 0) , cr, ccl, preenchido));
+    //     }
 
-        cpos = cpos + vetor(0, csz, 0);
-    }
+    //     cpos = cpos + vetor(0, csz, 0);
+    // }
 
-    for(int i=0; i<3; i+=1)
-        for(int j=0; j<3; j+=2)
-            for(int k=0; k<3; k+=1)
-                objs.emplace_back(new esfera(point(i*300 - 300, j*300, k*300 - 300), 75 , vetor(0.5*i, 0.5*j, 0.5*k)));
+    // for(int i=0; i<3; i+=1)
+    //     for(int j=0; j<3; j+=2)
+    //         for(int k=0; k<3; k+=1)
+    //             objs.emplace_back(new esfera(point(i*300 - 300, j*300, k*300 - 300), 75 , vetor(0.5*i, 0.5*j, 0.5*k)));
 
-    objs.emplace_back(new esfera(point(800, 20, 0), 75, vetor(0.2, 0.6, 0.9))); 
-
+    // objs.emplace_back(new esfera(point(800, 20, 0), 75, vetor(0.2, 0.6, 0.9))); 
+    objs.emplace_back(new esfera(point(0, 0, 0), 0.5, vetor(0.2, 0.2, 0.9))); 
     return objs;
 };
+
+void get_malha_objs(std::vector<objeto*> &objs){
+    matrix<4, 4> m ({
+        {2, 0, 0, 2},
+        {0, 1, 0, 2},
+        {0, 0, 3, 2},
+        {0, 0, 0, 1},
+    });
+    matrix<4, 4> translacao ({
+        {1, 0, 0, 20},
+        {0, 1, 0, 10},
+        {0, 0, 1, 10},
+        {0, 0, 0,  1},
+    });
+    auto r = MatrixZRotation(PI/4);
+    
+    matrix<4, 4> escala ({
+        {10, 0, 0, 0},
+        {0, 10, 0, 0},
+        {0, 0, 10, 0},
+        {0, 0, 0,  1},
+    });
+
+    objReader obj("inputs/cubo.obj");
+    objReader obj2("inputs/cubo2.obj");
+    auto cubo = new malha(obj);
+    auto cubo2 = new malha(obj2);
+    objs.emplace_back( cubo );
+    objs.emplace_back( cubo2 );
+    cubo->affine_transform(translacao);
+    cubo2->affine_transform(translacao);
+    
+    objReader objm("inputs/monkey.obj");
+    auto macaco = new malha(objm);
+    objs.emplace_back( macaco );
+    macaco->affine_transform(escala);
+
+    auto c = macaco->get_centroid();
+
+    matrix<4, 4> tr ({
+        {1, 0, 0, -c.getX()},
+        {0, 1, 0, -c.getY()},
+        {0, 0, 1, -c.getZ()},
+        {0, 0, 0, 1},
+    });
+    macaco->affine_transform(tr);
+}
 
 const double scale_down = 0.6;
 const double EPS = 0.0001;
 
-double velocidade = 45;
+double velocidade = 5;
 double rtt_vel = PI / 8;
 vetor vel_vector, rotate_vector;
 std::set<sf::Keyboard::Key> activeKeys;
@@ -104,8 +152,8 @@ void update_pos(Camera &cam, sf::RenderWindow &window){
 }
 
 void check_velocidade(){
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Equal))  velocidade += 1;
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Hyphen)) velocidade -= 1;
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Equal))  velocidade += 0.1;
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Hyphen)) velocidade -= 0.1;
 }
 
 void check_dist(Camera &cam){
@@ -144,27 +192,29 @@ void update_moving(std::vector<objeto*> &objs){
     objs.back()->set_pos( point() + (objs.back()->get_pos() - point()).rotatey(0.1) );
 }
 
+point pos (0, 5, 15);
+point mira(0, 0, 0); 
+vetor up (0, 1, 0);
+Camera cam(pos, mira, up, 0.75, WIDTH, HEIGHT);
+
 int main(){
     cerr << fixed << setprecision(2);
-    point pos (1500, 500, -1000);
-    point mira = point();//  + vetor(10, 0, 0); 
-    vetor up (0, 1, 0);
-    Camera cam(pos, mira, up, 0.75, WIDTH, HEIGHT);
  
     auto scene_objs = get_scene();
-    
+    get_malha_objs(scene_objs);
+
     sf::RenderWindow window(sf::VideoMode({WIDTH, HEIGHT}), "SFML window");
     // window.setFramerateLimit(60);
     sf::Image image(sf::Vector2u(WIDTH, HEIGHT), sf::Color::White);
     std::vector<vetor> img_colors;
+    
     window.setMouseCursorVisible(!controlar);  
 
     clock_t t = clock();
     cam.shot(scene_objs);
     time_correction = (clock() - t) * 0.1;
+    time_correction = 0.1;
     cerr << time_correction << "\n";
-
-
 
     while(window.isOpen()){
         handle_events(window);
@@ -172,14 +222,15 @@ int main(){
 
         time_correction = (clock() - t) * 0.1;
         check_velocidade();
-        check_dist(cam);
-        update_moving(scene_objs);
+        // check_dist(cam);
+        // update_moving(scene_objs);
 
         if(controlar) update_pos(cam, window);
         else 
         {
-            cam.rotatey(0.005 * velocidade);
-            cam.set_position( point() + (cam.get_pos() - point()).rotatey(0.005 * velocidade) );
+            const double sla = 0.05;
+            cam.rotatey(sla * velocidade);
+            cam.set_position( point() + (cam.get_pos() - point()).rotatey(sla * velocidade) );
         }
 
         t = clock();
