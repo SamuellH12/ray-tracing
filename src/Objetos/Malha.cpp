@@ -181,7 +181,7 @@ private:
         {
             // plano X
             double n = r.get_direction().getX();
-            if(abs(n) > 1e-8){
+            if(abs(n) > 1e-6){
                 double t = (bx1 - r.get_origin()).getX() / n;
                 if(t > 0) {    
                     point i = r.get_origin() + r.get_direction() * t;
@@ -190,17 +190,17 @@ private:
                     point b (a.getX(), a.getY(), c.getZ());
                     point d (a.getX(), c.getY(), a.getZ());
 
-                    int modulo = round(((b-a) % (i - a)).normalized().getX());
-                    if( ((c-b) % (i - b)).normalized().getX()*modulo > 0 
-                    &&  ((d-c) % (i - c)).normalized().getX()*modulo > 0 
-                    &&  ((a-d) % (i - d)).normalized().getX()*modulo > 0 )
+                    int modulo = ((b-a) % (i - a)).getX() > 0 ? 1 : -1;
+                    if( ((c-b) % (i - b)).getX()*modulo > 0 
+                    &&  ((d-c) % (i - c)).getX()*modulo > 0 
+                    &&  ((a-d) % (i - d)).getX()*modulo > 0 )
                         return true;
                 }
             }
 
             // plano Y
             n = r.get_direction().getY();
-            if(abs(n) > 1e-8){
+            if(abs(n) > 1e-6){
                 double t = (bx1 - r.get_origin()).getY() / n;
                 if(t > 0) {
                     point i = r.get_origin() + r.get_direction() * t;
@@ -209,17 +209,17 @@ private:
                     point b (a.getX(), a.getY(), c.getZ());
                     point d (c.getX(), a.getY(), a.getZ());
 
-                    int modulo = round(((b-a) % (i - a)).normalized().getY());
-                    if( ((c-b) % (i - b)).normalized().getY()*modulo > 0 
-                    &&  ((d-c) % (i - c)).normalized().getY()*modulo > 0 
-                    &&  ((a-d) % (i - d)).normalized().getY()*modulo > 0 )
+                    int modulo = ((b-a) % (i - a)).getY() > 0 ? 1 : -1;
+                    if( ((c-b) % (i - b)).getY()*modulo > 0 
+                    &&  ((d-c) % (i - c)).getY()*modulo > 0 
+                    &&  ((a-d) % (i - d)).getY()*modulo > 0 )
                         return true;
                 }
             }
 
             // Plano Z
             n = r.get_direction().getZ();
-            if(abs(n) > 1e-8){
+            if(abs(n) > 1e-6){
                 double t = (bx1 - r.get_origin()).getZ() / n;
                 if(t > 0) {
                     point i = r.get_origin() + r.get_direction() * t;
@@ -228,10 +228,10 @@ private:
                     point b (c.getX(), a.getY(), a.getZ());
                     point d (a.getX(), c.getY(), a.getZ());
 
-                    int modulo = round(((b-a) % (i - a)).normalized().getZ());
-                    if( ((c-b) % (i - b)).normalized().getZ()*modulo > 0 
-                    &&  ((d-c) % (i - c)).normalized().getZ()*modulo > 0 
-                    &&  ((a-d) % (i - d)).normalized().getZ()*modulo > 0 )
+                    int modulo = ((b-a) % (i - a)).getZ() > 0 ? 1 : -1;
+                    if( ((c-b) % (i - b)).getZ()*modulo > 0 
+                    &&  ((d-c) % (i - c)).getZ()*modulo > 0 
+                    &&  ((a-d) % (i - d)).getZ()*modulo > 0 )
                         return true;
                 }
             }
