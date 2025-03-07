@@ -13,8 +13,8 @@ point pos (10, 5, 15);
 point mira(0, 0, 0); 
 vetor up (0, 1, 0);
 double dist = 0.75;
-const int v_res=1080;
-const int h_res= 1920;
+const int v_res=1080/2;
+const int h_res= 1920/2;
 point luzpos = point(5, 10, 13);
 
 Camera cam(pos, mira, up, dist, v_res, h_res);
@@ -67,7 +67,10 @@ int main(){
 
     /*************************************/
     // Adicionar objetos na cena
-    luzes.emplace_back(Color(0.75, 0.75, 0.75), luzpos);
+    luzes.emplace_back(Color(0.7, 0.0, 0.0), point(+20, 3, +20));
+    luzes.emplace_back(Color(0.0, 0.7, 0.0), point(+20, 3, -20));
+    luzes.emplace_back(Color(0.0, 0.0, 0.7), point(-20, 3, +20));
+    luzes.emplace_back(Color(0.3, 0.3, 0.3)*0.25, luzpos);
 
     objs.emplace_back(new plano(point(0, -7, 0), vetor(0, 1, 0), Color(0.3, 0.8, 0.4)));
     objs.back()->setka( Color(0.3, 0.8, 0.4) );
