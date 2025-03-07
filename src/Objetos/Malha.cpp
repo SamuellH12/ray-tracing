@@ -6,6 +6,7 @@
 #include "../ObjReader.cpp"
 #include "../Matrix.cpp"
 #include "Objeto.cpp"
+#include "Face.cpp"
 #include <vector>
 #include <deque>
 #include <tuple>
@@ -41,10 +42,49 @@ private:
         if( ((c-b) % (i - b)) * normal < 0 ) return Intersection();
         if( ((a-c) % (i - c)) * normal < 0 ) return Intersection();
 
-
-        Color cl = color * max(0.0, min(normal * r.get_direction() * -1.0 + 0.15, 1.0));
-        return Intersection(t, normal, cl);
+        // Color cl = f.kd * max(0.0, min(normal * r.get_direction() * -1.0 + 0.15, 1.0));
+        // Color cl = f.get_color(r, i, normal, Ia, luzes, objetos);
+        return Intersection(t, normal, Color(), id_face);
     }
+
+    Color get_face_color(int id_face, ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos){
+        Face &f = faces[id_face];
+        point &a = vertices[f.verticeIndice[0]];
+        vetor normal = f.normal;
+
+        double n = normal * r.get_direction();
+        double d = normal * (a - r.get_origin());
+        double t = (d/n);
+        point i = r.get_point(t);
+
+        return f.get_color(r, i, normal, Ia, luzes, objetos);
+    }
+
+    bool has_face_intersection(int id_face, ray &r, double tmax){
+        Face &f = faces[id_face];
+        point &a = vertices[f.verticeIndice[0]];
+        vetor normal = f.normal;
+
+        double n = normal * r.get_direction();
+
+        if(abs(n) < 1e-8) return false;
+
+        double d = normal * (a - r.get_origin());
+        double t = (d/n);
+
+        if(t <= 0 || t > tmax) return false;
+
+        point i = r.get_origin() + r.get_direction() * t;
+        point &b = vertices[f.verticeIndice[1]];
+        point &c = vertices[f.verticeIndice[2]];
+
+        if( ((b-a) % (i - a)) * normal < 0 ) return false;
+        if( ((c-b) % (i - b)) * normal < 0 ) return false;
+        if( ((a-c) % (i - c)) * normal < 0 ) return false;
+
+        return true;
+    }
+
 
 public:
     malha(){}
@@ -56,7 +96,33 @@ public:
         calc_centroid();
     }
 
-    Intersection get_intersection(ray &r) override{ 
+    bool has_intersection(ray &r, double tmax = std::numeric_limits<double>::infinity()) override{
+        q.emplace_back(0, 0, (int)faces.size()-1);
+        auto r2 = r;
+
+        while(!q.empty())
+        {
+            auto [u, l, r] = q.front();
+            q.pop_front();
+
+            if(!boundbox_intersection(r2, boundboxes[u].first, boundboxes[u].second))
+                continue;
+
+            if(node_childs[u].first != -1)
+            {
+                q.emplace_back(node_childs[u].first, l, (l+r)/2);
+                q.emplace_back(node_childs[u].second, (l+r)/2+1, r);
+            }
+            else 
+                for(int i=l; i<=r; i++)
+                    if(has_face_intersection(i, r2, tmax))
+                        return true;
+        }
+
+        return false;
+    }
+
+    Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos) override{ 
         Intersection ans;
 
         q.emplace_back(0, 0, (int)faces.size()-1);
@@ -79,6 +145,7 @@ public:
                 ans = min<Intersection>(ans, get_face_intersection(i, r2));
         }
 
+        if(ans.metadata != -1) ans.color = get_face_color(ans.metadata, r2, Ia, luzes, objetos);
 
         return ans;
     }

@@ -13,9 +13,25 @@ private:
 
 public:
     esfera(){}
-    esfera(point pos, double raio, Color color) : objeto(pos, color), h(raio) {}
+    esfera(point pos, double raio, Color kd) : objeto(pos, kd), h(raio) {}
 
-    Intersection get_intersection(ray &r) override{ 
+    bool has_intersection(ray &r, double tmax = std::numeric_limits<double>::infinity()) override{
+        vetor oc = r.get_origin() - pos;
+        double a = r.get_direction() * r.get_direction();
+        double b = 2.0 * (oc * r.get_direction());
+        double c = oc * oc - h*h;
+        double dlt = b*b - 4.0*a*c;
+
+        if(dlt < 0.0) return false;
+
+        double t = (-b - sqrt(dlt)) / (2.0 * a);
+        if(t < 0) t = (-b + sqrt(dlt)) / (2.0 * a);
+
+        return t >= 0.0 && t <= tmax;
+    }
+
+
+    Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos) override{
         vetor oc = r.get_origin() - pos;
         double a = r.get_direction() * r.get_direction();
         double b = 2.0 * (oc * r.get_direction());
@@ -30,8 +46,7 @@ public:
         point inter = r.get_origin() + (r.get_direction()*t);  
         vetor normal = inter - pos;
 
-        double seno = (normal%r.get_direction()).norm() / (normal.norm() * (r.get_direction().norm()));
-        Color cl = color*(1.0-abs(seno));
+        Color cl = get_color(r, inter, normal, Ia, luzes, objetos);
 
         return t >= 0.0 ? Intersection(t, normal, cl) : Intersection();
     }

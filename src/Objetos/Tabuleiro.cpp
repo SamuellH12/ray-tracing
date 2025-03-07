@@ -21,7 +21,7 @@ public:
         ort = (normal % dir).normalized() * sqrt(dir*dir);
     }
 
-    Intersection get_intersection(ray &r) override{
+    Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos) override{
 
         double n = normal * r.get_direction();
 
@@ -37,7 +37,7 @@ public:
         int x = floor((oi*dir) / (dir*dir)); //calcula a projeção do vetor oi na direção
         int y = floor((oi*ort) / (ort*ort));
         
-        Color cl = (abs(x)%2 == abs(y)%2) ?  colorb : color;
+        Color cl = (abs(x)%2 == abs(y)%2) ?  colorb : kd;
 
         return Intersection(t, normal, cl);
     }

@@ -7,9 +7,9 @@ class point;
 
 class vetor{
     private:
-        double x;
-        double y;
-        double z;
+        double x = 0;
+        double y = 0;
+        double z = 0;
     
     public:
 
@@ -38,8 +38,15 @@ class vetor{
     double getX() const { return x; }
     double getY() const { return y; }
     double getZ() const { return z; }
+
+
+    // for color only // multiplicação par a par
+    vetor operator^ (const vetor&v) const{ return  vetor(x*v.x, y*v.y, z*v.z); }
 };
 
 typedef vetor Color;
+// class Color : vetor {
+    // (const vetor&v) const{ return  x*v.x + y*v.y + z*v.z; }  //DOT product / Produto interno
+// };
 
 #endif

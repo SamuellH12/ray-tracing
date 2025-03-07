@@ -32,7 +32,7 @@ class Camera{
     }
 
     //retorna um vetor com as cores
-    std::vector<Color> shot(std::vector<objeto*> const &objetos, vetor backgroud_top = vetor(0.3, 0.3, 0.7), vetor backgroud_bottom = vetor(1, 1, 1)){
+    std::vector<Color> shot(std::vector<objeto*> const &objetos, std::vector<Luz> const &luzes, Luz Ia = Luz(Color(0.25, 0.25, 0.25)), vetor backgroud_top = vetor(0.3, 0.3, 0.7), vetor backgroud_bottom = vetor(1, 1, 1)){
         std::vector<Color> tela;
 
         double pixel_unit = 1.0 / h_res;
@@ -50,9 +50,10 @@ class Camera{
                 Intersection inter (backgroud_top * ((double)(v_res - y)/(double)v_res) + backgroud_bottom * ((double)y/(double)v_res));
                 
                 for(auto &obj : objetos)
-                    inter = min<Intersection>(inter, obj->get_intersection(r));
+                    inter = min<Intersection>(inter, obj->get_intersection(r, Ia, luzes, objetos));
 
                 tela.push_back(inter.color);
+                // std::cerr << y << " " << x << "\r";
             }
             std::cout << (y+1.0) / v_res * 100.0 << "%\r";
         }

@@ -31,42 +31,10 @@ Caso sintam necessidade, podem editar a classe para obter mais informações.
 #include <sstream>
 #include "Vector.cpp"
 #include "Point.cpp"
+#include "Objetos/Face.cpp"
 #include "Colormap.cpp"
 
 
-
-struct Face {
-    int verticeIndice[3];
-    int normalIndice[3];
-    vetor ka;
-    vetor kd;
-    vetor ks;
-    vetor ke;
-    vetor normal;
-    double ns;
-    double ni;
-    double d;
-
-    Face() {
-        for (int i = 0; i < 3; ++i) {
-            verticeIndice[i] = 0;
-            normalIndice[i] = 0;
-        }
-        ka = vetor();
-        kd = vetor();
-        ks = vetor();
-        ke = vetor();
-        ns = 0.0;
-        ni = 0.0;
-        d = 0.0;
-    }
-
-    void recalc_normal(std::vector<point> &vertices){
-        normal = (vertices[verticeIndice[1]] - vertices[verticeIndice[0]]) % 
-                 (vertices[verticeIndice[2]] - vertices[verticeIndice[0]]);
-        normal = normal.normalized();
-    }
-};
 
 class objReader {
 
@@ -222,6 +190,10 @@ public:
             }
             std::clog << std::endl;
         }
+    }
+
+    void print_faces_k(){
+        for(auto &f : faces) f.print_k();
     }
 };
 

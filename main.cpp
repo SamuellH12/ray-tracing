@@ -3,28 +3,34 @@
 #include "src/ObjReader.cpp"
 #include "src/Camera.cpp"
 #include "src/Vector.cpp"
+#include "src/Luz.cpp"
 #include "src/Objetos/Esfera.cpp"
 #include "src/Objetos/Plano.cpp"
 #include "src/Objetos/Tabuleiro.cpp"
 #include "src/Objetos/Malha.cpp"
 #include <vector>
-point pos (0, 5, 15);
+point pos (10, 5, 15);
 point mira(0, 0, 0); 
 vetor up (0, 1, 0);
 double dist = 0.75;
 const int v_res=1080;
 const int h_res= 1920;
+point luzpos = point(5, 10, 13);
 
 Camera cam(pos, mira, up, dist, v_res, h_res);
 std::vector<objeto*> objs;
+std::vector<Luz> luzes;
+Luz lambiente (Color(0.01, 0.01, 0.01));
+
+int minmax(int x){ return max(min(x, 255), 0); }
 
 void generate_img(){
     ofstream Saida("out.ppm", ios::trunc);
-    std::vector<vetor> cores = cam.shot(objs);
+    std::vector<vetor> cores = cam.shot(objs, luzes, lambiente);
 
     Saida << "P3\n" << h_res << " " << v_res << "\n255\n";
     for(auto &v : cores)
-        Saida << (int)(v.getX()*255) << " " << (int)(v.getY()*255) << " " << (int)(v.getZ()*255) << endl;
+        Saida << minmax(v.getX()*255) << " " << minmax(v.getY()*255) << " " << minmax(v.getZ()*255) << endl;
     
     Saida.close();
 
@@ -39,14 +45,14 @@ int main(){
 
     // matrizes de operadores afins
     matrix<4, 4> m ({
-        {2, 0, 0, 2},
-        {0, 1, 0, 2},
-        {0, 0, 3, 2},
-        {0, 0, 0, 1},
+        {2, 0, 0,  0},
+        {0, 1, 0, -3},
+        {0, 0, 1,  4},
+        {0, 0, 0,  1},
     });
     matrix<4, 4> translacao ({
         {1, 0, 0, 0},
-        {0, 1, 0, -10},
+        {0, 1, 0, 5},
         {0, 0, 1, 0},
         {0, 0, 0,  1},
     });
@@ -61,7 +67,11 @@ int main(){
 
     /*************************************/
     // Adicionar objetos na cena
-    objs.emplace_back(new tabuleiro(point(0, -7, 0), vetor(0, 1, 0), vetor(1, 0, 0), vetor(0.3, 0.8, 0.4), vetor(1, 1, 1)));
+    luzes.emplace_back(Color(0.75, 0.75, 0.75), luzpos);
+
+    objs.emplace_back(new plano(point(0, -7, 0), vetor(0, 1, 0), Color(0.3, 0.8, 0.4)));
+    objs.back()->setka( Color(0.3, 0.8, 0.4) );
+    // objs.emplace_back(new tabuleiro(point(0, -7, 0), vetor(0, 1, 0), vetor(1, 0, 0), vetor(0.3, 0.8, 0.4), vetor(1, 1, 1)));
     
     objReader obj("inputs/cubo.obj");
     objReader obj2("inputs/cubo2.obj");
@@ -69,6 +79,12 @@ int main(){
     auto cubo2 = new malha(obj2);
     objs.emplace_back( cubo );
     objs.emplace_back( cubo2 );
+    // obj.print_faces_k();
+
+    // objs.emplace_back(new esfera(point(10000, -2000, -8000), 1500, vetor(1, 1, 0)));
+    // objs.emplace_back(new esfera(mira, 50, vetor(1, 0, 0)));
+    objs.emplace_back(new esfera(cubo->get_centroid() + vetor(-3, 2, 3), 0.75, vetor(0.1, 0.2, 0.9)));
+    objs.emplace_back(new esfera(cubo->get_centroid() + (luzpos - cubo->get_centroid())*-0.5 + vetor(0, 0, 2.95), 1, vetor(0.4, 0.8, 0.6)));
     
     objReader objm("inputs/monkey.obj");
     auto macaco = new malha(objm);
