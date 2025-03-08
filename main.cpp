@@ -9,13 +9,13 @@
 #include "src/Objetos/Tabuleiro.cpp"
 #include "src/Objetos/Malha.cpp"
 #include <vector>
-point pos (10, 5, 15);
-point mira(0, 0, 0); 
-vetor up (0, 1, 0);
+point pos (10, 100, 10);
+point mira(10, 0, 10); 
+vetor up (1, 0, 0);
 double dist = 0.75;
 const int v_res=1080/2;
 const int h_res= 1920/2;
-point luzpos = point(5, 10, 13);
+point luzpos = point(10, 3, 10);
 
 Camera cam(pos, mira, up, dist, v_res, h_res);
 std::vector<objeto*> objs;
@@ -67,10 +67,10 @@ int main(){
 
     /*************************************/
     // Adicionar objetos na cena
-    luzes.emplace_back(Color(0.7, 0.0, 0.0), point(+20, 3, +20));
-    luzes.emplace_back(Color(0.0, 0.7, 0.0), point(+20, 3, -20));
-    luzes.emplace_back(Color(0.0, 0.0, 0.7), point(-20, 3, +20));
-    luzes.emplace_back(Color(0.3, 0.3, 0.3)*0.25, luzpos);
+    //luzes.emplace_back(Color(0.7, 0.0, 0.0), point(+20, 3, +20));
+    //luzes.emplace_back(Color(0.0, 0.7, 0.0), point(+20, 3, -20));
+    //luzes.emplace_back(Color(0.0, 0.0, 0.7), point(-20, 3, +20));
+    luzes.emplace_back(Color(1, 1, 1), luzpos);
 
     objs.emplace_back(new plano(point(0, -7, 0), vetor(0, 1, 0), Color(0.3, 0.8, 0.4)));
     objs.back()->setka( Color(0.3, 0.8, 0.4) );
