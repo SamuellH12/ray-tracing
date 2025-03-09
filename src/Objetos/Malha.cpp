@@ -99,6 +99,7 @@ public:
     }
 
     bool has_intersection(ray &r, double tmax = std::numeric_limits<double>::infinity()) override{
+        std::deque<std::tuple<int, int, int>> q;
         q.emplace_back(0, 0, (int)faces.size()-1);
         auto r2 = r;
 
