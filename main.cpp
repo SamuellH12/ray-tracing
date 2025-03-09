@@ -34,11 +34,11 @@ void generate_img(Scene cena){
 int main(){
     std::cout << std::fixed << std::setprecision(4);
 
-    Scene cena_sample = get_scene_sample();
-    generate_img(cena_sample);
+    // Scene cena_sample = get_scene_sample();
+    // generate_img(cena_sample);
     
-    // Scene cena_debug = get_scene_debug();
-    // generate_img(cena_debug);
+    Scene cena_debug = get_scene_debug();
+    generate_img(cena_debug);
 
     return 0;
 }
