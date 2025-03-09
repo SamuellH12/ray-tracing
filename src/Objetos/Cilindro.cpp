@@ -32,10 +32,10 @@ public:
 
         if ((inter - center).norm2() > h*h) return Intersection();
 
-        return Intersection(t, normal, color);
+        return Intersection(t, normal, ka);
     }
 
-    Intersection get_intersection(ray &r) override{ 
+    bool has_intersection(ray &r, double tmax = std::numeric_limits<double>::infinity()) override{
         vetor oc = r.get_origin() - pos;
         vetor dir = r.get_direction();
         vetor axis_norm = v.normalized();
@@ -45,13 +45,13 @@ public:
         double c = (oc - axis_norm * (oc * axis_norm)).norm2() - h*h;
         double dlt = b*b - 4.0*a*c;
 
-        if (dlt < 0.0) return oco ? Intersection() : std::min(disk_inter(r, pos), disk_inter(r, pos+v));
+        if (dlt < 0.0) return false;
 
         double raiz = sqrt(dlt);
         double t = (-b - raiz) / (2.0 * a);
         bool changed = false;
         if (t < 0) t = (-b + raiz) / (2.0 * a), changed = true;
-        if (t < 0) return oco ? Intersection() : std::min(disk_inter(r, pos), disk_inter(r, pos+v));
+        if (t < 0) return false;
 
         point inter = r.get_origin() + r.get_direction() * t;
         double projection = (inter - pos) * axis_norm;
@@ -63,14 +63,48 @@ public:
             projection = (inter - pos) * axis_norm;
         }
 
-        if (projection < 0 || projection*projection > v.norm2()) return oco ? Intersection() : std::min(disk_inter(r, pos), disk_inter(r, pos+v));
+        if (projection < 0 || projection*projection > v.norm2()) return false;
+
+        return true;
+    }
+
+    Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos) override{ 
+        vetor oc = r.get_origin() - pos;
+        vetor dir = r.get_direction();
+        vetor axis_norm = v.normalized();
+
+        double a = (dir - axis_norm * (dir * axis_norm)).norm2();
+        double b = 2.0 * ((dir - axis_norm * (dir * axis_norm)) * (oc - axis_norm * (oc * axis_norm)));
+        double c = (oc - axis_norm * (oc * axis_norm)).norm2() - h*h;
+        double dlt = b*b - 4.0*a*c;
+
+        if (dlt < 0.0) return oco ? Intersection() : Intersection(); // : std::min(disk_inter(r, pos), disk_inter(r, pos+v));
+
+        double raiz = sqrt(dlt);
+        double t = (-b - raiz) / (2.0 * a);
+        bool changed = false;
+        if (t < 0) t = (-b + raiz) / (2.0 * a), changed = true;
+        if (t < 0) return oco ? Intersection() : Intersection(); // std::min(disk_inter(r, pos), disk_inter(r, pos+v));
+
+        point inter = r.get_origin() + r.get_direction() * t;
+        double projection = (inter - pos) * axis_norm;
+        
+        if(!changed && (projection < 0 || projection*projection > v.norm2())) // se falhou, testa com o outro
+        { 
+            t = (-b + raiz) / (2.0 * a);
+            inter = r.get_origin() + r.get_direction() * t;
+            projection = (inter - pos) * axis_norm;
+        }
+
+        if (projection < 0 || projection*projection > v.norm2()) return oco ? Intersection() : Intersection(); // : std::min(disk_inter(r, pos), disk_inter(r, pos+v));
 
         vetor normal = inter - (pos + axis_norm * projection);
         double seno = (normal%r.get_direction()).norm() / (normal.norm() * (r.get_direction().norm()));
-        Color cl = color*(1.0-abs(seno));
+        Color cl = get_color(r, r.get_point(t), normal, Ia, luzes, objetos);
 
         //testa interseção pras "tampas"
-        if(oco) Intersection(t, normal, cl);
-        return std::min(Intersection(t, normal, cl), std::min(disk_inter(r, pos), disk_inter(r, pos+v)));
+        // if(oco) 
+        return Intersection(t, normal, cl);
+        // return std::min(Intersection(t, normal, cl), std::min(disk_inter(r, pos), disk_inter(r, pos+v)));
     }
 };

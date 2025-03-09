@@ -22,7 +22,7 @@ class Camera{
 
     //Construtores
     Camera() {}
-    Camera(point pos, point mira, vetor up, double dist, int h_res=800, int v_res=600) 
+    Camera(point pos, point mira, vetor up, double dist, int v_res=800, int h_res=600) 
     : c(pos), m(mira), up(up), dist(dist), v_res(v_res), h_res(h_res)
     {
         v = (m - c).normalized() * -1.0;
