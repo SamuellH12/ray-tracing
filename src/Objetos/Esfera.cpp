@@ -42,15 +42,17 @@ public:
 
         if(dlt < 0.0) return Intersection();
 
-        double t = (-b - sqrt(dlt)) / (2.0 * a);
-        if(t < 0) t = (-b + sqrt(dlt)) / (2.0*a);
+        double raiz = sqrt(dlt);
+        double t = (-b - raiz) / (2.0*a);
+        if(t < 0) t = (-b + raiz) / (2.0*a);
+        if(t < 0) return Intersection();
 
         point inter = r.get_origin() + (r.get_direction()*t);  
         vetor normal = inter - pos;
 
         Color cl = get_color(r, inter, normal, Ia, luzes, objetos);
 
-        return t >= 0.0 ? Intersection(t, normal, cl) : Intersection();
+        return Intersection(t, normal, cl);
     }
 };
 

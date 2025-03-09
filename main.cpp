@@ -7,6 +7,7 @@
 #include "src/Objetos/Esfera.cpp"
 #include "src/Objetos/Plano.cpp"
 #include "src/Objetos/Tabuleiro.cpp"
+#include "src/Objetos/Cilindro.cpp"
 #include "src/Objetos/Malha.cpp"
 #include "scenes/sceneObj.cpp"
 #include "scenes/templateScene.cpp"

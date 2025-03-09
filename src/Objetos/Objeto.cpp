@@ -86,6 +86,9 @@ public:
         return I;
     }
 
+    point get_pos(){ return pos; }
+    void  set_pos(point p){ this->pos = p; }
+
     void setka(Color k){ ka = k; }
     void setkd(Color k){ kd = k; }
     void setks(Color k){ ks = k; }

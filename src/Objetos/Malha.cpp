@@ -126,6 +126,7 @@ public:
 
     Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos) override{ 
         Intersection ans;
+        std::deque<std::tuple<int, int, int>> q;
 
         q.emplace_back(0, 0, (int)faces.size()-1);
         auto r2 = r;
@@ -172,10 +173,10 @@ private:
     point centroid;
     std::vector<std::pair<point, point>> boundboxes;
     std::vector<std::pair<int, int>> node_childs;
-    std::deque<std::tuple<int, int, int>> q;
 
 
     void calc_tree(){
+        std::deque<std::tuple<int, int, int>> q;
         boundboxes.clear();
         node_childs.clear();
         
@@ -246,7 +247,7 @@ private:
         return {point(xn, yn, zn), point(xm, ym, zm)};
     }
 
-    bool boundbox_intersection(ray &r, point &bx1, point &bx2){
+    bool boundbox_intersection(ray &r, point bx1, point bx2){
         for(int __=0; __<2; __++, swap(bx1, bx2))
         {
             // plano X

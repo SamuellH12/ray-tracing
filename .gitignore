@@ -21,3 +21,9 @@ cmake-build-*/
 build
 build/_deps
 _deps
+
+
+#Pasta do CMake
+build
+build/_deps
+_deps

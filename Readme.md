@@ -8,6 +8,25 @@
 
 <hr>
 
+Pra rodar o cmake:
+
+```
+   mkdir build 
+   cd .\build\ 
+   cmake -G "MinGW Makefiles" ..
+   cd ..
+   cmake -B build
+```
+
+After it you can build and run the program with this:
+
+```
+   cmake --build build
+   .\build\bin\space.exe
+```
+
+<hr>
+
 ### Entrega 1
 
 #### Nessa fase, os grupos implementarão um Ray-Caster básico. Para isso, é preciso:
