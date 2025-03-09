@@ -22,7 +22,7 @@ After it you can build and run the program with this:
 
 ```
    cmake --build build
-   .\build\bin\main.exe
+   .\build\bin\space.exe
 ```
 
 <hr>

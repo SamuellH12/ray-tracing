@@ -15,9 +15,9 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(main main.cpp)
+add_executable(space space.cpp)
 # target_compile_features(main PRIVATE cxx_std_17)
-target_link_libraries(main PRIVATE SFML::Graphics)
+target_link_libraries(space PRIVATE SFML::Graphics)
 
 # add_compile_options(-fopenmp)
 message(STATUS, "CXXFLAGS: ${CMAKE_CXX_FLAGS}")
