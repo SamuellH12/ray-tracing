@@ -1,3 +1,5 @@
+#ifndef ESFERAHEADER
+#define ESFERAHEADER
 #include <iostream>
 #include <math.h>
 #include "../Point.cpp"
@@ -51,3 +53,5 @@ public:
         return t >= 0.0 ? Intersection(t, normal, cl) : Intersection();
     }
 };
+
+#endif

@@ -1,3 +1,5 @@
+#ifndef TABULEIROHEADER
+#define TABULEIROHEADER
 #include <iostream>
 #include <math.h>
 #include "../Point.cpp"
@@ -42,3 +44,4 @@ public:
         return Intersection(t, normal, cl);
     }
 };
+#endif

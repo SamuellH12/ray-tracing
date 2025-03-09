@@ -1,3 +1,5 @@
+#ifndef PLANOHEADER
+#define PLANOHEADER
 #include <iostream>
 #include <math.h>
 #include "../Point.cpp"
@@ -13,7 +15,7 @@ private:
 
 public:
     plano(){}
-    plano(point pos, vetor normal, Color color) : objeto(pos, color), normal(normal) {}
+    plano(point pos, vetor normal, Color color) : objeto(pos, color), normal(normal.normalized()) {}
 
     bool has_intersection(ray &r, double tmax = std::numeric_limits<double>::infinity()) override{
         double n = normal * r.get_direction();
@@ -34,8 +36,10 @@ public:
         double d = normal * (pos - r.get_origin());
         double t = (d/n);
 
-        Color cl = get_color(r, r.get_point(t), normal, Ia, luzes, objetos);
+        if(t < 0.0) return Intersection();
 
-        return t >= 0.0 ? Intersection(t, normal, cl) : Intersection();
-    } // point inter = r.get_origin() + r.get_direction()*t;
+        Color cl = get_color(r, r.get_point(t), normal, Ia, luzes, objetos);
+        return Intersection(t, normal, cl);
+    }
 };
+#endif

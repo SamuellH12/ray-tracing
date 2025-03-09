@@ -80,16 +80,30 @@ template<int H=4, int W=4> class matrix {
 
 };
 
+const double PI = acos(-1);
+
+matrix<4, 4> MatrixXRotation(double theta){
+  return matrix<4, 4> ({
+    {1, 0, 0, 0},
+    {0, cos(theta), -sin(theta), 0},
+    {0, sin(theta),  cos(theta), 0},
+    {0, 0, 0, 1}
+  });
+}
+matrix<4, 4> MatrixYRotation(double theta){
+  return matrix<4, 4> ({
+    {cos(theta), 0, -sin(theta), 0},
+    {     0,     1,    0,        0},
+    {sin(theta), 0,  cos(theta), 0},
+    {0, 0, 0, 1}
+  });
+}
 matrix<4, 4> MatrixZRotation(double theta){
-  matrix<4, 4> t ({
+  return matrix<4, 4> ({
     {cos(theta), -sin(theta), 0, 0},
     {sin(theta), cos(theta), 0, 0},
     {0, 0, 1, 0},
     {0, 0, 0, 1}
   });
-
-  return t;
 }
-
-// const double PI = acos(-1);
 #endif

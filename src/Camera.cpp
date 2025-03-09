@@ -6,6 +6,7 @@
 #include "Vector.cpp"
 #include "Ray.cpp"
 #include "Objetos/Objeto.cpp"
+#include "Objetos/Esfera.cpp"
 
 class Camera{
     private:
@@ -13,11 +14,11 @@ class Camera{
         point m; //mira
         vetor up; //cima
         vetor u, v, w; // vetores ortonormais da base da camera
-        int v_res = 600; //vertical resolturion
-        int h_res = 800; //horizontal resolution / valor padrão arbitrário
         double dist;
     
     public:
+        int v_res = 600; //vertical resolturion
+        int h_res = 800; //horizontal resolution / valor padrão arbitrário
 
     //Construtores
     Camera() {}
@@ -35,6 +36,7 @@ class Camera{
     std::vector<Color> shot(std::vector<objeto*> const &objetos, std::vector<Luz> const &luzes, Luz Ia = Luz(Color(0.25, 0.25, 0.25)), vetor backgroud_top = vetor(0.3, 0.3, 0.7), vetor backgroud_bottom = vetor(1, 1, 1)){
         std::vector<Color> tela;
 
+        esfera sfr(luzes[0].pos, 2, Color(1, 0, 0));
         double pixel_unit = 1.0 / h_res;
 
         for(int y=0; y<v_res; y++) {
@@ -52,6 +54,7 @@ class Camera{
                 for(auto &obj : objetos)
                     inter = min<Intersection>(inter, obj->get_intersection(r, Ia, luzes, objetos));
 
+                // inter = min(inter, sfr.get_intersection(r, Ia, luzes, objetos));
                 tela.push_back(inter.color);
                 // std::cerr << y << " " << x << "\r";
             }

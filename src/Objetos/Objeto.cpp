@@ -1,3 +1,5 @@
+#ifndef OBJETOHEADER
+#define OBJETOHEADER
 #include <iostream>
 #include <math.h>
 #include "../Point.cpp"
@@ -6,7 +8,6 @@
 #include <vector>
 #include <tuple>
 #include "../Luz.cpp"
-#pragma once
 
 struct Intersection {
     double dist = 1.0/0.0; //double inf
@@ -53,7 +54,6 @@ public:
     {
         double t = (1.0-d) * (4.0 / ((ni+1)*(ni+1)) );
         kt = Color(t, t, t);
-        // kt = kt.normalized();
     }
 
     virtual bool has_intersection(ray &r, double tmax = std::numeric_limits<double>::infinity()){ return false; }
@@ -62,13 +62,13 @@ public:
     
     virtual Color get_color(ray &r, point p, vetor normal, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos){ 
         Color I = ka^Ia.I;
-        point pt = p + (r.get_direction() * -1.0 * (1e-5));
+        point pt = p + (r.get_direction() * -1 * (1e-6));
         for(auto [Pi, Ii] : luzes)
         {
             vetor Li = Pi - pt;
-            ray q (pt, Li);
             double tmax = Li.norm();
             Li = Li.normalized();
+            ray q (pt, Li);
             vetor Ri = normal*2.0*(normal*Li) - Li;
 
             bool ok = true;
@@ -87,8 +87,11 @@ public:
     }
 
     void setka(Color k){ ka = k; }
+    void setkd(Color k){ kd = k; }
+    void setks(Color k){ ks = k; }
 };
 
+#endif
 
 /*
 

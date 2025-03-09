@@ -51,9 +51,9 @@ struct Face {
         for(auto [Pi, Ii] : luzes)
         {
             vetor Li = Pi - pt;
+            double tmax = Li.norm();
             Li = Li.normalized();
             ray q (pt , Li);
-            double tmax = Li.norm();
             vetor Ri = normal*2.0*(normal*Li) - Li;
 
             bool ok = true;

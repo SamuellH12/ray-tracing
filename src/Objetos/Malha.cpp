@@ -1,3 +1,5 @@
+#ifndef MALHAHEADER
+#define MALHAHEADER
 #include <iostream>
 #include <math.h>
 #include "../Point.cpp"
@@ -25,12 +27,12 @@ private:
 
         double n = normal * r.get_direction();
 
-        if(abs(n) < 1e-8) return Intersection();
+        if( n == 0.0) return Intersection();
 
         double d = normal * (a - r.get_origin());
         double t = (d/n);
 
-        if(t <= 0) return Intersection();
+        if(t < 0) return Intersection();
         //tem intersecao com o plano
         //a intersecao esta dentro do triangulo?
 
@@ -67,12 +69,12 @@ private:
 
         double n = normal * r.get_direction();
 
-        if(abs(n) < 1e-8) return false;
+        if(n == 0.0) return false;
 
         double d = normal * (a - r.get_origin());
         double t = (d/n);
 
-        if(t <= 0 || t > tmax) return false;
+        if(0.0 > t || t > tmax) return false;
 
         point i = r.get_origin() + r.get_direction() * t;
         point &b = vertices[f.verticeIndice[1]];
@@ -309,3 +311,4 @@ private:
         return false;
     }
 };
+#endif
