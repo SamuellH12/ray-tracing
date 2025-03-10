@@ -75,7 +75,7 @@ void check_dist(Camera &cam){
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::N))  cam.set_dist(cam.get_dist() - 0.1);
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::M))  cam.set_dist(cam.get_dist() + 0.1);
 }
-int minmax(int x){ return x; return max(min(x, 255), 0); }
+int minmax(int x){ return max(min(x, 255), 0); }
 
 int LUZID = 0;
 void update_pos_luz(std::vector<Luz>& luzes, Camera& cam, sf::RenderWindow &window){
