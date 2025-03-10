@@ -110,47 +110,66 @@ Scene get_scene_sample(){
     return cena;
 }
 
-#endif
 
-/*
-int main(){
+Scene get_scene_classic(int v_res=600, int h_res= 800, point camPos = point(-322, 134, -182), point luzPos = point(10, 80, 10)){
+    point mira(0, 0, 0); 
+    vetor up (0, 1, 0);
+    double dist = 0.75;
+
+    Scene cena(Camera(camPos, mira, up, dist, v_res, h_res), Luz(Color(0.25, 0.25, 0.25)));
+
+    cena.luzes.emplace_back(Color(0.5, 0.5, 0.5), luzPos);
+    cena.luzes.emplace_back(Color(1, 0, 0), point(-50, 15,  20));
+    cena.luzes.emplace_back(Color(0, 1, 0), point(+50, 15,  20));
+    cena.luzes.emplace_back(Color(0, 0, 1), point(-50, 15, -20));
+    
+    /*************************************/
     // Adicionar objetos na cena
-    //luzes.emplace_back(Color(0.7, 0.0, 0.0), point(+20, 3, +20));
-    //luzes.emplace_back(Color(0.0, 0.7, 0.0), point(+20, 3, -20));
-    //luzes.emplace_back(Color(0.0, 0.0, 0.7), point(-20, 3, +20));
-    luzes.emplace_back(Color(1, 1, 1), luzpos);
-
-    objs.emplace_back(new plano(point(0, -7, 0), vetor(0, 1, 0), Color(0.3, 0.8, 0.4)));
-    objs.back()->setka( Color(0.3, 0.8, 0.4) );
-    // objs.emplace_back(new tabuleiro(point(0, -7, 0), vetor(0, 1, 0), vetor(1, 0, 0), vetor(0.3, 0.8, 0.4), vetor(1, 1, 1)));
     
-    objReader obj("inputs/cubo.obj");
-    objReader obj2("inputs/cubo2.obj");
-    auto cubo = new malha(obj);
-    auto cubo2 = new malha(obj2);
-    objs.emplace_back( cubo );
-    objs.emplace_back( cubo2 );
-    // obj.print_faces_k();
-
-    // objs.emplace_back(new esfera(point(10000, -2000, -8000), 1500, vetor(1, 1, 0)));
-    // objs.emplace_back(new esfera(mira, 50, vetor(1, 0, 0)));
-    // objs.emplace_back(new esfera(cubo->get_centroid() + vetor(-3, 2, 3), 0.75, vetor(0.1, 0.2, 0.9)));
-    // objs.emplace_back(new esfera(cubo->get_centroid() + (luzpos - cubo->get_centroid())*-0.5 + vetor(0, 0, 2.95), 1, vetor(0.4, 0.8, 0.6)));
+    cena.add_obj(new esfera(point(1000, -200, -800), 150, vetor(1, 1, 0)));
     
-    objReader objm("inputs/monkey.obj");
-    auto macaco = new malha(objm);
-    // objs.emplace_back( macaco );
-    // macaco->affine_transform(m);
+    // cena.add_obj(new tabuleiro(point(0, -10, 0), vetor(0, 1, 0), vetor(1, 0, 0), vetor(0.3, 0.8, 0.4), vetor(1, 1, 1)));
+    cena.add_obj(new plano(point(0, -10, 0), vetor(0, 1, 0), Color(0.3, 0.8, 0.4)));
+    cena.objetos.back()->setka( Color(0.3, 0.8, 0.4) );
 
-    cubo2->affine_transform(translacao);
-    // cubo->affine_transform(m);
-    // cubo->affine_transform(r);
+    cena.add_obj(new esfera(point(150, 5, 120), 8, Color(0.8, 0.7, 0.2)));
 
-    objs.emplace_back(new esfera(point(10000, -2000, -8000), 1500, vetor(1, 1, 0)));
-    objs.emplace_back(new esfera(mira, 50, vetor(1, 0, 0)));
-    objs.emplace_back(new esfera(point(1000, 0, 2000), 500, vetor(1, 0, 0)));
-    for(int i=0; i<3; i++)
-        for(int j=0; j<3; j++)
-            for(int k=0; k<3; k++)
-                objs.emplace_back(new esfera(point(i*300, j*300, k*300), 75 , vetor(0.5*i, 0.5*j, 0.5*k)));
-*/
+    for(int i=0; i<3; i+=1)
+        for(int j=0; j<3; j+=1)
+            for(int k=0; k<3; k+=1){
+                cena.add_obj(new esfera(point(i*30 - 30, j*30, k*30 - 30), 7.5, Color(0.5*i, 0.5*j, 0.5*k)));
+                // Color cl(0.75, 0.25, 0.25);
+                // cena.objetos.back()->setkd(cl * i/3.0);
+                // cena.objetos.back()->setka(cl * j/3.0);
+                // cena.objetos.back()->setks(cl * k/3.0);
+            }
+
+    Color RED(1, 0, 0);
+    cena.add_obj(new esfera(point(70, 0, 170), 50, RED));
+    cena.objetos.back()->setkd( RED );
+    cena.objetos.back()->setka( RED );
+    cena.objetos.back()->setks( RED );
+
+    // point cpos(1500, 0, 300);
+    // double csz = 500;
+    // double cr = 50;
+    // Color ccl (0.8, 0.3, 0.6);
+    // vetor nxt(csz, 0, 0);
+    // bool preenchido = false;
+
+    // for(int j=0; j<2; j++){
+    //     for(int i=0; i<4; i++){
+    //         objs.emplace_back(new cilindro(cpos, cpos+nxt, cr, ccl, preenchido));
+    //         cpos = cpos+nxt;
+    //         nxt = nxt.rotatey(PI/2.0);
+    //         if(!j) objs.emplace_back(new cilindro(cpos, cpos + vetor(0, csz, 0) , cr, ccl, preenchido));
+    //     }
+
+    //     cpos = cpos + vetor(0, csz, 0);
+    // }
+
+    return cena;
+}
+
+
+#endif

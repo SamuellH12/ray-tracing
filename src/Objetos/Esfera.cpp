@@ -48,7 +48,7 @@ public:
         if(t < 0) return Intersection();
 
         point inter = r.get_origin() + (r.get_direction()*t);  
-        vetor normal = inter - pos;
+        vetor normal = (inter - pos).normalized();
 
         Color cl = get_color(r, inter, normal, Ia, luzes, objetos);
 

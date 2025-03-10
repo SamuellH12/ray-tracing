@@ -33,28 +33,28 @@ class Camera{
     }
 
     //retorna um vetor com as cores
-    std::vector<Color> shot(std::vector<objeto*> const &objetos, std::vector<Luz> const &luzes, Luz Ia = Luz(Color(0.25, 0.25, 0.25)), vetor backgroud_top = vetor(0.25, 0.25, 1), vetor backgroud_bottom = vetor(1, 1, 1)){
+    std::vector<Color> shot(std::vector<objeto*> const &objetos, std::vector<Luz> const &luzes, Luz Ia = Luz(Color(0.25, 0.25, 0.25)), bool showpercentage = true, vetor backgroud_top = vetor(0.3, 0.3, 0.7), vetor backgroud_bottom = vetor(1, 1, 1)){
         std::vector<Color> tela(v_res*h_res);
 
         esfera sfr(luzes[0].pos, 2, Color(1, 0, 0));
         double pixel_unit = 1.0 / h_res;
 
-        #pragma omp parallel for
         for(int y=0; y<v_res; y++) {
+            #pragma omp parallel for
             for(int x=0; x<h_res; x++)
             {
                 point tl = c - v*dist   +  u*(pixel_unit*(v_res/2.0 - y - 0.5))  -  w*(pixel_unit*(h_res/2.0 - x - 0.5));
                 ray r(c, (tl-c));
 
                 double seno = ( 1.0 + r.get_direction().getY() ) / 2.0; // calcula o ângulo pra usar como porcentagem da cor do ceu 
-                Intersection inter (backgroud_top * (seno) + backgroud_bottom * (1.0-seno));
+                Intersection inter (backgroud_top * ((double)(v_res - y)/(double)v_res) + backgroud_bottom * ((double)y/(double)v_res));
                 
                 for(auto &obj : objetos)
                     inter = min<Intersection>(inter, obj->get_intersection(r, Ia, luzes, objetos));
 
                 tela[x + y*h_res] = inter.color;
             }
-            std::cout << (y+1.0) / v_res * 100.0 << "%\r";
+            if(showpercentage) std::cout << (y+1.0) / v_res * 100.0 << "%\r";
         }
 
         return tela;

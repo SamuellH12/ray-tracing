@@ -7,11 +7,11 @@
 #include "src/Objetos/Esfera.cpp"
 #include "src/Objetos/Plano.cpp"
 #include "src/Objetos/Tabuleiro.cpp"
-#include "src/Objetos/Cilindro.cpp"
 #include "src/Objetos/Malha.cpp"
 #include "scenes/sceneObj.cpp"
 #include "scenes/templateScene.cpp"
 #include <vector>
+#pragma GCC optimize("O3")
 
 int minmax(int x){ return max(min(x, 255), 0); }
 
@@ -35,11 +35,14 @@ void generate_img(Scene cena){
 int main(){
     std::cout << std::fixed << std::setprecision(4);
 
-    // Scene cena_sample = get_scene_sample();
-    // generate_img(cena_sample);
+    Scene cena_sample = get_scene_sample();
+    generate_img(cena_sample);
     
-    Scene cena_debug = get_scene_debug();
-    generate_img(cena_debug);
+    // Scene cena_debug = get_scene_debug();
+    // generate_img(cena_debug);
+
+    Scene cena_classica = get_scene_classic();
+    generate_img(cena_classica);
 
     return 0;
 }

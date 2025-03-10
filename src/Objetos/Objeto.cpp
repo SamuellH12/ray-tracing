@@ -45,7 +45,7 @@ protected:
 public:
     objeto(){}
     objeto(point pos) : pos(pos) {}
-    objeto(point pos, Color cor) : pos(pos), kd(cor) {}
+    objeto(point pos, Color cor) : pos(pos), kd(cor), ka(cor*0.5) {}
     objeto(point pos, Color kd, Color ks, Color ka, Color ke, Color kt, double ns) : 
     pos(pos), kd(kd), ks(ks), ka(ka), ke(ke), kt(kt), ns(ns) {}
 
@@ -63,13 +63,14 @@ public:
     virtual Color get_color(ray &r, point p, vetor normal, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos){ 
         Color I = ka^Ia.I;
         point pt = p + (r.get_direction() * -1 * (1e-6));
+        normal = normal.normalized();
         for(auto [Pi, Ii] : luzes)
         {
             vetor Li = Pi - pt;
             double tmax = Li.norm();
             Li = Li.normalized();
             ray q (pt, Li);
-            vetor Ri = normal*2.0*(normal*Li) - Li;
+            vetor Ri = (normal*2.0*(normal*Li) - Li).normalized();
 
             bool ok = true;
             for(auto obj : objetos)
@@ -81,7 +82,7 @@ public:
             if(!ok) continue;
             vetor v = r.get_direction()*-1;
 
-            I = I + ((Ii ^ kd) * (normal*Li)) + ((Ii ^ ks) * pow(Ri*v, ns));
+            I = I + ((Ii ^ kd) * std::max(normal*Li, 0.0)) + ((Ii ^ ks) * pow(std::max(Ri*v, 0.0), ns));
         }
         return I;
     }
@@ -89,9 +90,12 @@ public:
     point get_pos(){ return pos; }
     void  set_pos(point p){ this->pos = p; }
 
-    void setka(Color k){ ka = k; }
-    void setkd(Color k){ kd = k; }
-    void setks(Color k){ ks = k; }
+    void setka(Color k){  ka = k; }
+    void setkd(Color k){  kd = k; }
+    void setks(Color k){  ks = k; }
+    void setns(double n){ ns = n; }
+    void setni(double n){ ni = n; }
+    void setd (double n){ d  = n; }
 };
 
 #endif

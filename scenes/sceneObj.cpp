@@ -24,11 +24,16 @@ struct Scene {
     void add_obj(objeto* o){ objetos.emplace_back(o); }
     void add_luz(Luz l){ luzes.emplace_back(l); }
 
-    std::vector<Color> shot(){ return cam.shot(objetos, luzes, La); }
+    std::vector<Color> shot(bool show_percentage=true){ return cam.shot(objetos, luzes, La, show_percentage); }
 
     void delete_objs(){
         for(objeto* obj: objetos) delete obj;
         objetos.clear();
+    }
+
+    void set_camera_resolution(int WIDTH, int HEIGTH){
+        cam.h_res = h_res = WIDTH;
+        cam.v_res = v_res = HEIGTH;
     }
 };
 
