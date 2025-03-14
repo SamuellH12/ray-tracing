@@ -21,6 +21,9 @@ class ray{
     ray(point origin, vetor direction): origin(origin), direction(direction) {
         direction = direction.normalized();
     }
+    ray(point origin, point mira): origin(origin), direction(mira - origin) {
+        direction = direction.normalized();
+    }
 
     //Implemente os métodos aqui
 

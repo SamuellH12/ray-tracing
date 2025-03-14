@@ -37,6 +37,7 @@ public:
     double getX() const { return x; }
     double getY() const { return y; }
     double getZ() const { return z; }   
+    vetor to_vetor() const { return *this - point(); }
 };
 
 #endif

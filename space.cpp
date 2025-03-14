@@ -119,7 +119,50 @@ void update_pos_luz(std::vector<Luz>& luzes, Camera& cam, sf::RenderWindow &wind
     sf::Mouse::setPosition( sf::Vector2i(window.getSize().x/2, window.getSize().y / 2), window);
 }
 
-int TOTMODOS = 3;
+int IDBEZIER = 0;
+void update_bezier(std::vector<point>& pts, Camera& cam, sf::RenderWindow &window){
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num1)) IDBEZIER = (IDBEZIER+1)%pts.size();
+    auto &pt = pts[IDBEZIER];
+    vetor x = cam.get_v(); x = vetor(x.getX(), 0, x.getZ()).normalized();
+    vetor y(0, 1, 0);
+    vetor z = cam.get_w(); z = vetor(z.getX(), 0, z.getZ()).normalized();
+    double dlt_tm = delta_time();
+
+    vetor delta(0, 0, 0); //get movement from imput
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W))   delta = delta - (x * dlt_tm); else 
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) delta = delta + (x * dlt_tm);
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A))  delta = delta - (z * dlt_tm); else 
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) delta = delta + (z * dlt_tm);
+    
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Space))  delta = delta + (y * dlt_tm); else 
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)) delta = delta - (y * dlt_tm);
+
+    
+    auto mouseAt = sf::Mouse::getPosition(window);
+    vetor dltrotate(0, mousePos.y - mouseAt.y, mousePos.x - mouseAt.x); // get rotate from mouse
+    dltrotate = dltrotate * rtt_vel * (1.0 / window.getSize().y);
+
+
+    //update values and check limits
+    vel_vector = vel_vector*scale_down/dlt_tm + delta*velocidade;    // scale_down old velocity and apply the new
+    if(vel_vector.norm2() < EPS) vel_vector = vetor(0, 0, 0);   //if it is almost 0 it is 0
+    if(vel_vector.norm2() > velocidade*velocidade) vel_vector = vel_vector.normalized() * velocidade;   //dont let velocity go to infinity
+    
+    rotate_vector = rotate_vector*scale_down/dlt_tm + dltrotate*rtt_vel;
+    if(rotate_vector.norm2() < EPS) rotate_vector = vetor();
+    if(rotate_vector.norm2() > rtt_vel*rtt_vel) rotate_vector = rotate_vector.normalized() * rtt_vel;
+
+    //apply movement
+    pt = pt + vel_vector;
+    cam.rotatey(rotate_vector.getZ() * -1.0);
+    cam.rotatew(rotate_vector.getY() * -1.0);
+    sf::Mouse::setPosition( sf::Vector2i(window.getSize().x/2, window.getSize().y / 2), window);
+}
+
+
+int TOTMODOS = 4;
 int modo = 0;
 
 
@@ -168,6 +211,8 @@ int main(){
     auto &cam = cena.cam;
     auto &scene_objs = cena.objetos;
 
+    auto Bez = new Bline(std::vector<point>({point(0, 0, 0), point(10, 42, 45), point(25, 12, 35), point(-54, -10, 20)}), Color(0.2, 0.9, 0.3), 5);
+    scene_objs.emplace_back(Bez);
 
     sf::RenderWindow window(sf::VideoMode({WIDTH, HEIGHT}), "SFML window");
     // window.setFramerateLimit(60);
@@ -201,6 +246,8 @@ int main(){
         }
         else
         if(modo == 2) update_pos_luz(cena.luzes, cam, window);
+        else 
+        if(modo == 3) update_bezier(Bez->pts, cam, window);
 
         t = clock();
         mousePos = sf::Mouse::getPosition(window);
@@ -223,7 +270,7 @@ int main(){
 
         int curr_fps = 1.0/(((double)time_correction*10.0)/CLOCKS_PER_SEC);
         auto pos = cam.get_pos();
-        cerr << "FPS: " << curr_fps << "\t| velocidade: " << velocidade << "\t| cam_dist: " << cam.get_dist() << "\t | time_correction: " << time_correction << "\t | " << pos.getX() << "x " << pos.getY() << "y " << pos.getZ() << "z\t\t\t\r";
+        cerr << "FPS: " << curr_fps << "\t| velocidade: " << velocidade << "\t| cam_dist: " << cam.get_dist() << "\t | time_correction: " << time_correction << "\t | " << pos.getX() << "x " << pos.getY() << "y " << pos.getZ() << "z" << "\t\t\t\r";
 
         window.display();
     }

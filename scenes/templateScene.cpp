@@ -7,6 +7,7 @@
 #include "../src/Objetos/Plano.cpp"
 #include "../src/Objetos/Tabuleiro.cpp"
 #include "../src/Objetos/Malha.cpp"
+#include "../src/Objetos/BezierLine.cpp"
 #include "sceneObj.cpp"
 #include <vector>
 
@@ -125,6 +126,8 @@ Scene get_scene_classic(int v_res=600, int h_res= 800, point camPos = point(-322
     
     /*************************************/
     // Adicionar objetos na cena
+    cena.add_obj(new Bline(std::vector<point>({point(0, 0, 0), point(10, 42, 45), point(25, 12, 35), point(-54, -10, 20)}), Color(0.2, 0.9, 0.3), 5));
+    // cena.add_obj(new Bline(std::vector<point>({point(0, 0, 0), point(0, 10, 0)}), Color(0.2, 0.9, 0.3), 1));
     
     cena.add_obj(new esfera(point(1000, -200, -800), 150, vetor(1, 1, 0)));
     
@@ -134,21 +137,23 @@ Scene get_scene_classic(int v_res=600, int h_res= 800, point camPos = point(-322
 
     cena.add_obj(new esfera(point(150, 5, 120), 8, Color(0.8, 0.7, 0.2)));
 
-    for(int i=0; i<3; i+=1)
-        for(int j=0; j<3; j+=1)
-            for(int k=0; k<3; k+=1){
-                cena.add_obj(new esfera(point(i*30 - 30, j*30, k*30 - 30), 7.5, Color(0.5*i, 0.5*j, 0.5*k)));
-                // Color cl(0.75, 0.25, 0.25);
-                // cena.objetos.back()->setkd(cl * i/3.0);
-                // cena.objetos.back()->setka(cl * j/3.0);
-                // cena.objetos.back()->setks(cl * k/3.0);
-            }
+    // for(int i=0; i<3; i+=1)
+    //     for(int j=0; j<3; j+=1)
+    //         for(int k=0; k<3; k+=1){
+    //             cena.add_obj(new esfera(point(i*30 - 30, j*30, k*30 - 30), 7.5, Color(0.5*i, 0.5*j, 0.5*k)));
+    //             // Color cl(0.75, 0.25, 0.25);
+    //             // cena.objetos.back()->setkd(cl * i/3.0);
+    //             // cena.objetos.back()->setka(cl * j/3.0);
+    //             // cena.objetos.back()->setks(cl * k/3.0);
+    //         }
+
 
     Color RED(1, 0, 0);
     cena.add_obj(new esfera(point(70, 0, 170), 50, RED));
     cena.objetos.back()->setkd( RED );
     cena.objetos.back()->setka( RED );
     cena.objetos.back()->setks( RED );
+
 
     // point cpos(1500, 0, 300);
     // double csz = 500;

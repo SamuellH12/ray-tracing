@@ -36,7 +36,6 @@ class Camera{
     std::vector<Color> shot(std::vector<objeto*> const &objetos, std::vector<Luz> const &luzes, Luz Ia = Luz(Color(0.25, 0.25, 0.25)), bool showpercentage = true, vetor backgroud_top = vetor(0.3, 0.3, 0.7), vetor backgroud_bottom = vetor(1, 1, 1)){
         std::vector<Color> tela(v_res*h_res);
 
-        esfera sfr(luzes[0].pos, 2, Color(1, 0, 0));
         double pixel_unit = 1.0 / h_res;
 
         for(int y=0; y<v_res; y++) {
