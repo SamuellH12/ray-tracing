@@ -126,7 +126,7 @@ Scene get_scene_classic(int v_res=600, int h_res= 800, point camPos = point(-322
     
     /*************************************/
     // Adicionar objetos na cena
-    cena.add_obj(new Bline(std::vector<point>({point(0, 0, 0), point(10, 42, 45), point(25, 12, 35), point(-54, -10, 20)}), Color(0.2, 0.9, 0.3), 5));
+    // cena.add_obj(new Bline(std::vector<point>({point(0, 0, 0), point(10, 42, 45), point(25, 12, 35), point(-54, -10, 20)}), Color(0.2, 0.9, 0.3), 5));
     // cena.add_obj(new Bline(std::vector<point>({point(0, 0, 0), point(0, 10, 0)}), Color(0.2, 0.9, 0.3), 1));
     
     cena.add_obj(new esfera(point(1000, -200, -800), 150, vetor(1, 1, 0)));

@@ -37,6 +37,7 @@ public:
     std::vector<point> pts;
     double D;
     bool showMeta = false;
+    double metat = 0.5;
     
     point BX1, BX2;
 
@@ -65,7 +66,7 @@ public:
         return false;
     }
 
-    Intersection solve(std::vector<point> p, ray &r, int lvl = 7){
+    Intersection solve(std::vector<point> p, ray &r, int lvl = 8){
         auto [bx1, bx2] = calc_boundbox(p);
         if(!boundbox_intersection(r, bx1, bx2)) return Intersection();
 
@@ -84,7 +85,7 @@ public:
             if(t < 0) t = (-b + raiz) / (2.0*a);
             if(t < 0) return Intersection();
             vetor normal = (r.get_point(t) - pt).normalized();
-            return Intersection(t, normal, ka);
+            return Intersection(t, normal, kd);
         }
 
         std::vector<point> L, R;
@@ -109,7 +110,11 @@ public:
     Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos) override{ 
         // if(!boundbox_intersection(r, BX1, BX2)) return Intersection();
         Intersection ans = solve(pts, r);
-        if(ans.normal.norm2() > 0) ans.color = get_color(r, r.get_point(ans.dist), ans.normal, Ia, luzes, objetos);
+
+        // if(ans.normal.norm2() > 0) ans.color = get_color(r, r.get_point(ans.dist), ans.normal, Ia, luzes, objetos);
+
+        if(showMeta) ans = std::min(ans, metaInter(r, pts, 2)); 
+
         return ans;
     }
 
@@ -130,6 +135,83 @@ private:
         }
 
         return {point(xn-D, yn-D, zn-D), point(xm+D, ym+D, zm+D)};
+    }
+
+    Intersection metaInter(ray &r, std::vector<point> pt, double h=0.5)
+    {
+        if(pt.empty()) return Intersection();
+        Intersection ans = Intersection();
+
+        for(int i=0; i+1<pt.size(); i++)
+            ans = std::min(ans, std::min(point_intersection(r, pt[i], h), line_intersection(r, pt[i], pt[i+1], h/4.0)));
+
+        ans = std::min(ans, point_intersection(r, pt.back(), h));
+
+        for(int i=0; i+1<pt.size(); i++)
+                pt[i] = getPt(pt[i], pt[i+1], metat);
+        
+        pt.pop_back();
+
+        ans = std::min(ans, metaInter(r, pt, h*0.5));
+
+        return ans;
+    }
+
+    Intersection point_intersection(ray &r, point p, double h){
+        vetor oc = r.get_origin() - p;
+        double a = r.get_direction() * r.get_direction();
+        double b = 2.0 * (oc * r.get_direction());
+        double c = oc * oc - h*h;
+        double dlt = b*b - 4.0*a*c;
+
+        if(dlt < 0.0) return Intersection();
+
+        double raiz = sqrt(dlt);
+        double t = (-b - raiz) / (2.0*a);
+        if(t < 0) t = (-b + raiz) / (2.0*a);
+        if(t < 0) return Intersection();
+
+        point inter = r.get_origin() + (r.get_direction()*t);  
+        vetor normal = (inter - p).normalized();
+
+        return Intersection(t, normal, Color(1, 0, 0));
+    }
+
+    Intersection line_intersection(ray &r, point p, point q, double h){
+        vetor v = q-p;
+        vetor oc = r.get_origin() - p;
+        vetor dir = r.get_direction();
+        vetor axis_norm = v.normalized();
+
+        double a = (dir - axis_norm * (dir * axis_norm)).norm2();
+        double b = 2.0 * ((dir - axis_norm * (dir * axis_norm)) * (oc - axis_norm * (oc * axis_norm)));
+        double c = (oc - axis_norm * (oc * axis_norm)).norm2() - h*h;
+        double dlt = b*b - 4.0*a*c;
+
+        if (dlt < 0.0) return Intersection();
+
+        double raiz = sqrt(dlt);
+        double t = (-b - raiz) / (2.0 * a);
+        bool changed = false;
+        if (t < 0) t = (-b + raiz) / (2.0 * a), changed = true;
+        if (t < 0) return Intersection();
+
+        point inter = r.get_origin() + r.get_direction() * t;
+        double projection = (inter - p) * axis_norm;
+        
+        if(!changed && (projection < 0 || projection*projection > v.norm2())) // se falhou, testa com o outro
+        { 
+            t = (-b + raiz) / (2.0 * a);
+            inter = r.get_origin() + r.get_direction() * t;
+            projection = (inter - p) * axis_norm;
+        }
+
+        if (projection < 0 || projection*projection > v.norm2()) return Intersection();
+
+        vetor normal = inter - (p + axis_norm * projection);
+        double seno = (normal%r.get_direction()).norm() / (normal.norm() * (r.get_direction().norm()));
+
+        return Intersection(t, normal, Color(0, 0, 1));
     }
 };
 #endif
