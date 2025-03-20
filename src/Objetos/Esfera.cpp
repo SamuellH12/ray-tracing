@@ -17,19 +17,19 @@ public:
     esfera(){}
     esfera(point pos, double raio, Color kd) : objeto(pos, kd), h(raio) {}
 
-    bool has_intersection(ray &r, double tmax = std::numeric_limits<double>::infinity()) override{
+    double dist_intersection(ray &r) override{
         vetor oc = r.get_origin() - pos;
         double a = r.get_direction() * r.get_direction();
         double b = 2.0 * (oc * r.get_direction());
         double c = oc * oc - h*h;
         double dlt = b*b - 4.0*a*c;
 
-        if(dlt < 0.0) return false;
+        if(dlt < 0.0) return DOUBLEINF;
 
         double t = (-b - sqrt(dlt)) / (2.0 * a);
         if(t < 0) t = (-b + sqrt(dlt)) / (2.0 * a);
 
-        return t >= 0.0 && t <= tmax;
+        return t;
     }
 
 

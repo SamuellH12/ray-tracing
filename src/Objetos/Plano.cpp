@@ -17,15 +17,15 @@ public:
     plano(){}
     plano(point pos, vetor normal, Color color) : objeto(pos, color), normal(normal.normalized()) {}
 
-    bool has_intersection(ray &r, double tmax = std::numeric_limits<double>::infinity()) override{
+    double dist_intersection(ray &r) override{
         double n = normal * r.get_direction();
 
-        if(n == 0.0) return false;
+        if(n == 0.0) return DOUBLEINF;
 
         double d = normal * (pos - r.get_origin());
         double t = (d/n);
 
-        return t >= 0.0 && t <= tmax;
+        return t;
     }
 
     Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos,int profundidade = MAXREC) override{ 

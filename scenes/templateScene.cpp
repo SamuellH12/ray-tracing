@@ -8,6 +8,7 @@
 #include "../src/Objetos/Tabuleiro.cpp"
 #include "../src/Objetos/Malha.cpp"
 #include "../src/Objetos/BezierLine.cpp"
+#include "../src/Objetos/Cilindro.cpp"
 #include "sceneObj.cpp"
 #include <vector>
 
@@ -126,9 +127,9 @@ Scene get_scene_classic(int v_res=600, int h_res= 800, point camPos = point(-322
 
     Scene cena(Camera(camPos, mira, up, dist, v_res, h_res), Luz(Color(0.25, 0.25, 0.25)));
 
-    cena.luzes.emplace_back(Color(0.5, 0.5, 0.5), luzPos);
-    cena.luzes.emplace_back(Color(1, 0, 0), point(-50, 15,  20));
-    cena.luzes.emplace_back(Color(0, 1, 0), point(+50, 15,  20));
+    cena.luzes.emplace_back(Color(0.75, 0.75, 0.75), luzPos);
+    // cena.luzes.emplace_back(Color(1, 0, 0), point(-50, 15,  20));
+    // cena.luzes.emplace_back(Color(0, 1, 0), point(+50, 15,  20));
     // cena.luzes.emplace_back(Color(0, 0, 1), point(-50, 15, -20));
     
     /*************************************/
@@ -137,33 +138,36 @@ Scene get_scene_classic(int v_res=600, int h_res= 800, point camPos = point(-322
     // cena.add_obj(new Bline(std::vector<point>({point(0, 0, 0), point(0, 10, 0)}), Color(0.2, 0.9, 0.3), 1));
     
     
-    // cena.add_obj(new plano(point(1000, 70, 10000), vetor(0, 1, 0), Color(0, 0.2, 0.9)));
-    // cena.objetos.back()->setke( Color(1, 1, 1) );
+    cena.add_obj(new plano(point(1000, 70, 10000), vetor(0, 1, 0), Color(0, 0.2, 0.9)));
+    cena.objetos.back()->setke( Color(1, 1, 1) );
 
 
     // cena.add_obj(new esfera(point(1000, -200, -800), 150, vetor(1, 1, 0)));
     
     // // cena.add_obj(new tabuleiro(point(0, -10, 0), vetor(0, 1, 0), vetor(1, 0, 0), vetor(0.3, 0.8, 0.4), vetor(1, 1, 1)));
     cena.add_obj(new plano(point(0, -10, 0), vetor(0, 1, 0), Color(0.3, 0.8, 0.4)));
-    // cena.objetos.back()->setke( Color(0.5, 0.5, 0.5) );
+    cena.objetos.back()->setke( Color(0.5, 0.5, 0.5) );
     // // cena.objetos.back()->setka( Color(0.3, 0.8, 0.4) );
     // cena.objetos.back()->setka(Color());
     // cena.objetos.back()->setks(Color());
     // cena.objetos.back()->setkd(Color());
-    // cena.objetos.back()->setd(0.0);
-    // cena.objetos.back()->setni(1.05);
+    cena.objetos.back()->setd(0.01);
+    cena.objetos.back()->setni(1.1);
+
+    vetor dlt(-300, 0, 0);
+    cena.add_obj(new cilindro(point(200, -50, 53) + dlt, point(239, 20, 71)+dlt, 5, Color(0.7, 0.7, 0.1), true));
 
     // cena.add_obj(new esfera(point(150, 5, 120), 8, Color(0.8, 0.7, 0.2)));
 
-    // for(int i=0; i<3; i+=2)
-    //     for(int j=0; j<3; j+=2)
-    //         for(int k=0; k<3; k+=2){
-    //             cena.add_obj(new esfera(point(i*30 - 30, j*30, k*30 - 30), 7.5, Color(0.5*i, 0.5*j, 0.5*k)));
-    //             // Color cl(0.75, 0.25, 0.25);
-    //             // cena.objetos.back()->setkd(cl * i/3.0);
-    //             // cena.objetos.back()->setka(cl * j/3.0);
-    //             // cena.objetos.back()->setks(cl * k/3.0);
-    //         }
+    for(int i=0; i<3; i+=2)
+        for(int j=0; j<3; j+=2)
+            for(int k=0; k<3; k+=2){
+                cena.add_obj(new esfera(point(i*30 - 30, j*30, k*30 - 30), 7.5, Color(0.5*i, 0.5*j, 0.5*k)));
+                Color cl(0.25, 0.25, 0.75);
+                // cena.objetos.back()->setkd(cl * i/3.0);
+                cena.objetos.back()->setka(cl * j/3.0);
+                // cena.objetos.back()->setks(cl * k/3.0);
+            }
 
 
     Color RED(1, 0, 0);
@@ -172,6 +176,13 @@ Scene get_scene_classic(int v_res=600, int h_res= 800, point camPos = point(-322
     cena.objetos.back()->setka( RED );
     cena.objetos.back()->setks( RED );
 
+    cena.add_obj(new esfera(point(-100, 5, -140), 10, Color()));
+    cena.objetos.back()->setke( Color(0.75, 0.75, 0.75) );
+
+
+    cena.add_obj(new esfera(point(-200, 5, -170), 10, Color()));
+    cena.objetos.back()->setd(0.01);
+    cena.objetos.back()->setni(1.1);
 
     // point cpos(1500, 0, 300);
     // double csz = 500;
@@ -190,6 +201,7 @@ Scene get_scene_classic(int v_res=600, int h_res= 800, point camPos = point(-322
 
     //     cpos = cpos + vetor(0, csz, 0);
     // }
+
 
     return cena;
 }

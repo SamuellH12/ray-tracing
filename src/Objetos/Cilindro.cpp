@@ -36,24 +36,25 @@ public:
         return Intersection(t, normal, ka);
     }
 
-    bool disk_has_inter(ray &r, point center, double tmax = std::numeric_limits<double>::infinity()){
+    double disk_dist_inter(ray &r, point center){
         vetor normal = v.normalized();
         double denom = normal * r.get_direction();
-        if (fabs(denom) < 1e-6) return false; // paralelo
+        if (fabs(denom) < 1e-6) return DOUBLEINF; // paralelo
 
         vetor oc = center - r.get_origin();
 
         double t = (oc * normal) / denom;
-        if (t < 0) return false;
+        if (t < 0) return DOUBLEINF;
 
         point inter = r.get_origin() + r.get_direction() * t;
 
-        if ((inter - center).norm2() > h*h) return false;
-        return t < tmax;
+        if ((inter - center).norm2() > h*h) return DOUBLEINF;
+        return t;
     }
 
-    bool has_intersection(ray &r, double tmax = std::numeric_limits<double>::infinity()) override{
-        if(disk_has_inter(r, pos, tmax) || disk_has_inter(r, pos+v, tmax)) return true;
+    double dist_intersection(ray &r) override{
+        double t1 = std::min(disk_dist_inter(r, pos), disk_dist_inter(r, pos+v));
+
         vetor oc = r.get_origin() - pos;
         vetor dir = r.get_direction();
         vetor axis_norm = v.normalized();
@@ -63,13 +64,13 @@ public:
         double c = (oc - axis_norm * (oc * axis_norm)).norm2() - h*h;
         double dlt = b*b - 4.0*a*c;
 
-        if (dlt < 0.0) return false;
+        if (dlt < 0.0) return t1;
 
         double raiz = sqrt(dlt);
         double t = (-b - raiz) / (2.0 * a);
         bool changed = false;
         if (t < 0) t = (-b + raiz) / (2.0 * a), changed = true;
-        if (t < 0) return false;
+        if (t < 0) return t1;
 
         point inter = r.get_origin() + r.get_direction() * t;
         double projection = (inter - pos) * axis_norm;
@@ -81,14 +82,15 @@ public:
             projection = (inter - pos) * axis_norm;
         }
 
-        if (projection < 0 || projection*projection > v.norm2()) return false;
+        if (projection < 0 || projection*projection > v.norm2()) return t1;
 
-        return t < tmax;
+        return std::min(t, t1);
     }
 
     Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos, int profundidade = MAXREC) override{ 
         auto setintercolor = [&](Intersection &inter) -> Intersection& {
-            if(inter.dist <= (1.0/0.0)) inter.color = get_color(r, r.get_point(inter.dist), inter.normal, Ia, luzes, objetos, profundidade);
+            // if(inter.dist <= (1.0/0.0)) inter.color = get_color(r, r.get_point(inter.dist), inter.normal, Ia, luzes, objetos, profundidade-1);
+            inter.color = ka;
             return inter;
         };
         

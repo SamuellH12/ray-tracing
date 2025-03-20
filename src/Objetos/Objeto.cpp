@@ -10,6 +10,7 @@
 #include "../Luz.cpp"
 
 const int MAXREC = 10;
+const double DOUBLEINF = std::numeric_limits<double>::infinity();
 
 struct Intersection {
     double dist = 1.0/0.0; //double inf
@@ -62,7 +63,11 @@ public:
         recalcKt();
     }
 
-    virtual bool has_intersection(ray &r, double tmax = std::numeric_limits<double>::infinity()){ return false; }
+    virtual double dist_intersection(ray &r){ return std::numeric_limits<double>::infinity(); }
+    virtual bool has_intersection(ray &r, double tmax = std::numeric_limits<double>::infinity()){ 
+        double t = dist_intersection(r);
+        return 0 <= t && t <= tmax; 
+    }
 
     virtual Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos, int profundidade = MAXREC){ return Intersection(); }
     
@@ -94,34 +99,58 @@ public:
             I = I + newI*f;
         }
 
-
-        vetor rv = r.get_direction();
-
-        double n1 = 1;
-        double n2 = ni;
-        double n = n2/n1;
-        double seni = (rv%normal).norm();
-        double senr = seni/n2; //sin O_t
-        double cosot = sqrt(1 - senr*senr);
-        double coso  = sqrt(1 - seni*seni);
-        vetor T = rv/n  - normal*(cosot - coso/n);
-        
-        rv = r.get_direction() * -1;
-        vetor Rf = (normal*2.0*(normal*rv) - rv).normalized();
-        
         Intersection IR;
         Intersection IT;
-        ray rayR (pt, Rf);
 
-        pt = p + (r.get_direction() * (1e-6));
-        ray rayT (pt, T);
-
-        for(auto obj : objetos)
+        
+        // reflexão
+        if(ke.norm2() > 0) //só calcula se o objeto for reflexivo
         {
-            IR = std::min(IR, obj->get_intersection(rayR, Ia, luzes, objetos, profundidade-1) );
-            if(d < 1.0) IT = std::min(IT, obj->get_intersection(rayT, Ia, luzes, objetos, profundidade-1) );
+            vetor rv = r.get_direction() * -1;
+            vetor Rf = (normal*2.0*(normal*rv) - rv).normalized();
+            double distRef = DOUBLEINF;
+            objeto* obr = NULL;
+            
+            ray rayR (pt, Rf);
+            for(auto obj : objetos)
+            {
+                double dt = obj->dist_intersection(rayR);
+                if(dt < distRef && dt > 0.0)
+                    distRef = dt,
+                    obr = obj;
+                // IR = std::min(IR, obj->get_intersection(rayR, Ia, luzes, objetos, profundidade-1) );
+            }
+            
+            if(obr) IR = obr->get_intersection(rayR, Ia, luzes, objetos, profundidade-1);
         }
 
+        // refração
+        if(d < 1.0) // só calcula se o objeto for transparente
+        {
+            vetor rv = r.get_direction();
+            double n1 = 1;
+            double n2 = ni;
+            double n = n2/n1;
+            double seni = (rv%normal).norm();
+            double senr = seni/n2; //sin O_t
+            double cosot = sqrt(1 - senr*senr);
+            double coso  = sqrt(1 - seni*seni);
+            vetor T = rv/n  - normal*(cosot - coso/n);
+            ray rayT (p + (r.get_direction() * (1e-6)), T);
+            
+            double distTr = DOUBLEINF;
+            objeto* obt = NULL;
+
+            for(auto obj : objetos){
+                double dt = obj->dist_intersection(rayT);
+                if(dt < distTr && dt > 0.0)
+                    distTr = dt,
+                    obt = obj;
+                // IT = std::min(IT, obj->get_intersection(rayT, Ia, luzes, objetos, profundidade-1) );
+            }
+            
+            if(obt) IT = obt->get_intersection(rayT, Ia, luzes, objetos, profundidade-1);
+        }
 
         Color Ir = IR.color;
         Color It = IT.color;

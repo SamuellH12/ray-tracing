@@ -48,8 +48,17 @@ class Camera{
                 double seno = ( 1.0 + r.get_direction().getY() ) / 2.0; // calcula o ângulo pra usar como porcentagem da cor do ceu 
                 Intersection inter (backgroud_top * ((double)(v_res - y)/(double)v_res) + backgroud_bottom * ((double)y/(double)v_res));
                 
-                for(auto &obj : objetos)
-                    inter = min<Intersection>(inter, obj->get_intersection(r, Ia, luzes, objetos));
+                objeto* obi = NULL;
+                double dist = DOUBLEINF;
+
+                for(auto &obj : objetos){
+                    auto dt = obj->dist_intersection(r);
+                    if(dt < dist && dt > 0.0)
+                        dist = dt,
+                        obi = obj;
+                }
+                
+                if(obi) inter = std::min<Intersection>(inter, obi->get_intersection(r, Ia, luzes, objetos));
 
                 tela[x + y*h_res] = inter.color;
             }
