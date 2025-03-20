@@ -49,7 +49,7 @@ private:
         return Intersection(t, normal, Color(), id_face);
     }
 
-    Color get_face_color(int id_face, ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos){
+    Color get_face_color(int id_face, ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos, int profundidade){
         Face &f = faces[id_face];
         point &a = vertices[f.verticeIndice[0]];
         vetor normal = f.normal;
@@ -59,7 +59,7 @@ private:
         double t = (d/n);
         point i = r.get_point(t);
 
-        return f.get_color(r, i, normal, Ia, luzes, objetos);
+        return f.get_color(r, i, normal, Ia, luzes, objetos, profundidade);
     }
 
     bool has_face_intersection(int id_face, ray &r, double tmax){
@@ -125,7 +125,7 @@ public:
         return false;
     }
 
-    Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos) override{ 
+    Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos, int profundidade = MAXREC) override{ 
         Intersection ans;
         std::deque<std::tuple<int, int, int>> q;
 
@@ -149,7 +149,7 @@ public:
                 ans = min<Intersection>(ans, get_face_intersection(i, r2));
         }
 
-        if(ans.metadata != -1) ans.color = get_face_color(ans.metadata, r2, Ia, luzes, objetos);
+        if(ans.metadata != -1) ans.color = get_face_color(ans.metadata, r2, Ia, luzes, objetos, profundidade);
 
         return ans;
     }

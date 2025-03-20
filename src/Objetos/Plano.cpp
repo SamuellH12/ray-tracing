@@ -28,7 +28,7 @@ public:
         return t >= 0.0 && t <= tmax;
     }
 
-    Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos) override{ 
+    Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos,int profundidade = MAXREC) override{ 
         double n = normal * r.get_direction();
 
         if(n == 0.0) return Intersection();
@@ -38,7 +38,7 @@ public:
 
         if(t < 0.0) return Intersection();
 
-        Color cl = get_color(r, r.get_point(t), normal, Ia, luzes, objetos);
+        Color cl = get_color(r, r.get_point(t), normal, Ia, luzes, objetos, profundidade);
         return Intersection(t, normal, cl);
     }
 };

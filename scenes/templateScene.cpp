@@ -11,7 +11,7 @@
 #include "sceneObj.cpp"
 #include <vector>
 
-Scene get_scene_debug(point camPos = point(10, 100, 10), point luzPos = point(10, 3, 10)){
+Scene get_scene_debug(point camPos = point(20, 10, 10), point luzPos = point(10, 3, 10)){
     point mira(10, 0, 10); 
     vetor up (1.1, 0, 0);
     double dist = 0.75;
@@ -24,15 +24,22 @@ Scene get_scene_debug(point camPos = point(10, 100, 10), point luzPos = point(10
     // Adicionar objetos na cena
     cena.luzes.emplace_back(Color(1, 1, 1), luzPos);
 
+    // cena.add_obj(new plano(point(-1000, 10000, -1000), vetor(0, -1, 0), Color(0.3, 0.8, 0.4)));
+    // cena.objetos.back()->setke(Color(1, 1, 1));
+
+
     cena.add_obj(new plano(point(0, -7, 0), vetor(0, 1, 0), Color(0.3, 0.8, 0.4)));
     cena.objetos.back()->setka( Color(0.3, 0.8, 0.4) );
+    cena.objetos.back()->setke(Color(0.7, 0.7, 0.7))  ;
     
+    cena.add_obj(new esfera(mira, 0.75, vetor(0.1, 0.2, 0.9)));
+
     objReader obj("inputs/cubo.obj");
     objReader obj2("inputs/cubo2.obj");
     auto cubo = new malha(obj);
     auto cubo2 = new malha(obj2);
-    cena.add_obj( cubo );
-    cena.add_obj( cubo2 );
+    // cena.add_obj( cubo );
+    // cena.add_obj( cubo2 );
     
     /*************************************/
     // matrizes de operadores afins
@@ -112,7 +119,7 @@ Scene get_scene_sample(){
 }
 
 
-Scene get_scene_classic(int v_res=600, int h_res= 800, point camPos = point(-322, 134, -182), point luzPos = point(10, 80, 10)){
+Scene get_scene_classic(int v_res=600, int h_res= 800, point camPos = point(-322, 34, -182), point luzPos = point(10, 60, 10)){
     point mira(0, 0, 0); 
     vetor up (0, 1, 0);
     double dist = 0.75;
@@ -122,24 +129,35 @@ Scene get_scene_classic(int v_res=600, int h_res= 800, point camPos = point(-322
     cena.luzes.emplace_back(Color(0.5, 0.5, 0.5), luzPos);
     cena.luzes.emplace_back(Color(1, 0, 0), point(-50, 15,  20));
     cena.luzes.emplace_back(Color(0, 1, 0), point(+50, 15,  20));
-    cena.luzes.emplace_back(Color(0, 0, 1), point(-50, 15, -20));
+    // cena.luzes.emplace_back(Color(0, 0, 1), point(-50, 15, -20));
     
     /*************************************/
     // Adicionar objetos na cena
     // cena.add_obj(new Bline(std::vector<point>({point(0, 0, 0), point(10, 42, 45), point(25, 12, 35), point(-54, -10, 20)}), Color(0.2, 0.9, 0.3), 5));
     // cena.add_obj(new Bline(std::vector<point>({point(0, 0, 0), point(0, 10, 0)}), Color(0.2, 0.9, 0.3), 1));
     
-    cena.add_obj(new esfera(point(1000, -200, -800), 150, vetor(1, 1, 0)));
     
-    // cena.add_obj(new tabuleiro(point(0, -10, 0), vetor(0, 1, 0), vetor(1, 0, 0), vetor(0.3, 0.8, 0.4), vetor(1, 1, 1)));
+    // cena.add_obj(new plano(point(1000, 70, 10000), vetor(0, 1, 0), Color(0, 0.2, 0.9)));
+    // cena.objetos.back()->setke( Color(1, 1, 1) );
+
+
+    // cena.add_obj(new esfera(point(1000, -200, -800), 150, vetor(1, 1, 0)));
+    
+    // // cena.add_obj(new tabuleiro(point(0, -10, 0), vetor(0, 1, 0), vetor(1, 0, 0), vetor(0.3, 0.8, 0.4), vetor(1, 1, 1)));
     cena.add_obj(new plano(point(0, -10, 0), vetor(0, 1, 0), Color(0.3, 0.8, 0.4)));
-    cena.objetos.back()->setka( Color(0.3, 0.8, 0.4) );
+    // cena.objetos.back()->setke( Color(0.5, 0.5, 0.5) );
+    // // cena.objetos.back()->setka( Color(0.3, 0.8, 0.4) );
+    // cena.objetos.back()->setka(Color());
+    // cena.objetos.back()->setks(Color());
+    // cena.objetos.back()->setkd(Color());
+    // cena.objetos.back()->setd(0.0);
+    // cena.objetos.back()->setni(1.05);
 
-    cena.add_obj(new esfera(point(150, 5, 120), 8, Color(0.8, 0.7, 0.2)));
+    // cena.add_obj(new esfera(point(150, 5, 120), 8, Color(0.8, 0.7, 0.2)));
 
-    // for(int i=0; i<3; i+=1)
-    //     for(int j=0; j<3; j+=1)
-    //         for(int k=0; k<3; k+=1){
+    // for(int i=0; i<3; i+=2)
+    //     for(int j=0; j<3; j+=2)
+    //         for(int k=0; k<3; k+=2){
     //             cena.add_obj(new esfera(point(i*30 - 30, j*30, k*30 - 30), 7.5, Color(0.5*i, 0.5*j, 0.5*k)));
     //             // Color cl(0.75, 0.25, 0.25);
     //             // cena.objetos.back()->setkd(cl * i/3.0);

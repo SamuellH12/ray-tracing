@@ -107,7 +107,7 @@ public:
         return std::min(solve(L, r, lvl-1), solve(R, r, lvl-1));
     }
 
-    Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos) override{ 
+    Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos, int profundidade = MAXREC) override{ 
         // if(!boundbox_intersection(r, BX1, BX2)) return Intersection();
         Intersection ans = solve(pts, r);
 

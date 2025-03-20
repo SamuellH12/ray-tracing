@@ -86,9 +86,9 @@ public:
         return t < tmax;
     }
 
-    Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos) override{ 
+    Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos, int profundidade = MAXREC) override{ 
         auto setintercolor = [&](Intersection &inter) -> Intersection& {
-            if(inter.dist <= (1.0/0.0)) inter.color = get_color(r, r.get_point(inter.dist), inter.normal, Ia, luzes, objetos);
+            if(inter.dist <= (1.0/0.0)) inter.color = get_color(r, r.get_point(inter.dist), inter.normal, Ia, luzes, objetos, profundidade);
             return inter;
         };
         

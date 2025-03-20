@@ -33,7 +33,7 @@ public:
     }
 
 
-    Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos) override{
+    Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos, int profundidade = MAXREC) override{
         vetor oc = r.get_origin() - pos;
         double a = r.get_direction() * r.get_direction();
         double b = 2.0 * (oc * r.get_direction());
@@ -50,7 +50,7 @@ public:
         point inter = r.get_origin() + (r.get_direction()*t);  
         vetor normal = (inter - pos).normalized();
 
-        Color cl = get_color(r, inter, normal, Ia, luzes, objetos);
+        Color cl = get_color(r, inter, normal, Ia, luzes, objetos, profundidade);
 
         return Intersection(t, normal, cl);
     }

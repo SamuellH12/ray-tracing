@@ -23,7 +23,7 @@ public:
         ort = (normal % dir).normalized() * sqrt(dir*dir);
     }
 
-    Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos) override{
+    Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos, int profundidade = MAXREC) override{
 
         double n = normal * r.get_direction();
 

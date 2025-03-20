@@ -12,7 +12,7 @@
 #include <vector>
 #include <set>
 #include <SFML/Graphics.hpp>
-const int WIDTH = 400; 
+const int WIDTH = 300; 
 const int HEIGHT= 250;
 
 const double scale_down = 0.6;
@@ -164,7 +164,7 @@ void update_bezier(std::vector<point>& pts, Camera& cam, sf::RenderWindow &windo
 }
 
 
-int TOTMODOS = 4;
+int TOTMODOS = 3; //4;
 int modo = 0;
 
 
@@ -213,8 +213,8 @@ int main(){
     auto &cam = cena.cam;
     auto &scene_objs = cena.objetos;
 
-    auto Bez = new Bline(std::vector<point>({point(0, 0, 0), point(0, 42, 45), point(0, 12, 35), point(0, -10, 20)}), Color(0.1, 0.9, 0.2), 0.75);
-    scene_objs.emplace_back(Bez);
+    // auto Bez = new Bline(std::vector<point>({point(0, 0, 0), point(0, 42, 45), point(0, 12, 35), point(0, -10, 20)}), Color(0.1, 0.9, 0.2), 0.75);
+    // scene_objs.emplace_back(Bez);
 
     sf::RenderWindow window(sf::VideoMode({WIDTH, HEIGHT}), "SFML window");
     // window.setFramerateLimit(60);
@@ -248,13 +248,13 @@ int main(){
         }
         else
         if(modo == 2) update_pos_luz(cena.luzes, cam, window);
-        else 
-        if(modo == 3) update_bezier(Bez->pts, cam, window);
+        // else 
+        // if(modo == 3) update_bezier(Bez->pts, cam, window);
 
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num9)) BEZIERT -= 0.05;
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num0)) BEZIERT += 0.05;
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num8)) Bez->showMeta = SHOWMETA = !SHOWMETA;
-        Bez->metat = BEZIERT;
+        // if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Num8)) Bez->showMeta = SHOWMETA = !SHOWMETA;
+        // Bez->metat = BEZIERT;
 
         t = clock();
         mousePos = sf::Mouse::getPosition(window);

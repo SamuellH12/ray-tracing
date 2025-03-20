@@ -9,6 +9,8 @@
 #include <tuple>
 #include "../Luz.cpp"
 
+const int MAXREC = 10;
+
 struct Intersection {
     double dist = 1.0/0.0; //double inf
     Color color;
@@ -35,12 +37,17 @@ protected:
     Color kd; // difuso
     Color ks; // specular
     Color ka; // ambiental
-    Color ke; // Emissive
+    Color ke; // Emissive // Ke == Kr
     Color kt; // transmissão // double ni; //Optical density // double d; // Kt=(1−d) ⋅ 4/(Ni+1)^2
     double ns = 4; // mi // potencia // Shininess 
     double ni = 1;
     double d = 1;
     // Color kr; // reflexao
+
+    void recalcKt(){
+        double t = (1.0-d) * (4.0 / ((ni+1)*(ni+1)) );
+        kt = Color(t, t, t);
+    }
 
 public:
     objeto(){}
@@ -52,15 +59,16 @@ public:
     objeto(point pos, Color kd, Color ks, Color ka, Color ke, double ni, double d, double ns) : 
     pos(pos), kd(kd), ks(ks), ka(ka), ke(ke), kt(kt), ns(ns), ni(ni), d(d) 
     {
-        double t = (1.0-d) * (4.0 / ((ni+1)*(ni+1)) );
-        kt = Color(t, t, t);
+        recalcKt();
     }
 
     virtual bool has_intersection(ray &r, double tmax = std::numeric_limits<double>::infinity()){ return false; }
 
-    virtual Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos){ return Intersection(); }
+    virtual Intersection get_intersection(ray &r, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos, int profundidade = MAXREC){ return Intersection(); }
     
-    virtual Color get_color(ray &r, point p, vetor normal, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos){ 
+    virtual Color get_color(ray &r, point p, vetor normal, Luz const &Ia, std::vector<Luz> const &luzes, std::vector<objeto*> const &objetos, int profundidade){ 
+        if(profundidade <= 0) return Color(0, 0, 0);
+
         Color I = ka^Ia.I;
         point pt = p + (r.get_direction() * -1 * (1e-6));
         normal = normal.normalized();
@@ -72,18 +80,55 @@ public:
             ray q (pt, Li);
             vetor Ri = (normal*2.0*(normal*Li) - Li).normalized();
 
-            bool ok = true;
+            double f = 1;
             for(auto obj : objetos)
                 if(obj->has_intersection(q, tmax)){
-                    ok = false;
-                    break;
+                    f = f * ( 1.0 - obj->d);
+                    if(f < 1e-8) break;
                 }
 
-            if(!ok) continue;
+            if(f < 1e-8) continue;
             vetor v = r.get_direction()*-1;
 
-            I = I + ((Ii ^ kd) * std::max(normal*Li, 0.0)) + ((Ii ^ ks) * pow(std::max(Ri*v, 0.0), ns));
+            auto newI = ((Ii ^ kd) * std::max(normal*Li, 0.0)) + ((Ii ^ ks) * pow(std::max(Ri*v, 0.0), ns));
+            I = I + newI*f;
         }
+
+
+        vetor rv = r.get_direction();
+
+        double n1 = 1;
+        double n2 = ni;
+        double n = n2/n1;
+        double seni = (rv%normal).norm();
+        double senr = seni/n2; //sin O_t
+        double cosot = sqrt(1 - senr*senr);
+        double coso  = sqrt(1 - seni*seni);
+        vetor T = rv/n  - normal*(cosot - coso/n);
+        
+        rv = r.get_direction() * -1;
+        vetor Rf = (normal*2.0*(normal*rv) - rv).normalized();
+        
+        Intersection IR;
+        Intersection IT;
+        ray rayR (pt, Rf);
+
+        pt = p + (r.get_direction() * (1e-6));
+        ray rayT (pt, T);
+
+        for(auto obj : objetos)
+        {
+            IR = std::min(IR, obj->get_intersection(rayR, Ia, luzes, objetos, profundidade-1) );
+            if(d < 1.0) IT = std::min(IT, obj->get_intersection(rayT, Ia, luzes, objetos, profundidade-1) );
+        }
+
+
+        Color Ir = IR.color;
+        Color It = IT.color;
+
+        I = I + (kt ^ It);
+        I = I + (ke ^ Ir);
+
         return I;
     }
 
@@ -93,9 +138,10 @@ public:
     void setka(Color k){  ka = k; }
     void setkd(Color k){  kd = k; }
     void setks(Color k){  ks = k; }
+    void setke(Color k){  ke = k; }
     void setns(double n){ ns = n; }
-    void setni(double n){ ni = n; }
-    void setd (double n){ d  = n; }
+    void setni(double n){ ni = n; recalcKt(); }
+    void setd (double n){ d  = n; recalcKt(); }
 };
 
 
