@@ -57,8 +57,8 @@ public:
     objeto(point pos, Color kd, Color ks, Color ka, Color ke, Color kt, double ns) : 
     pos(pos), kd(kd), ks(ks), ka(ka), ke(ke), kt(kt), ns(ns) {}
 
-    objeto(point pos, Color kd, Color ks, Color ka, Color ke, double ni, double d, double ns) : 
-    pos(pos), kd(kd), ks(ks), ka(ka), ke(ke), kt(kt), ns(ns), ni(ni), d(d) 
+    objeto(point pos, Color _kd, Color _ks, Color _ka, Color _ke, double _ni, double _d, double _ns) : 
+    pos(pos), kd(_kd), ks(_ks), ka(_ka), ke(_ke), ns(_ns), ni(_ni), d(_d) 
     {
         recalcKt();
     }
@@ -171,6 +171,7 @@ public:
     void setns(double n){ ns = n; }
     void setni(double n){ ni = n; recalcKt(); }
     void setd (double n){ d  = n; recalcKt(); }
+    double getd(){ return d; }
 };
 
 

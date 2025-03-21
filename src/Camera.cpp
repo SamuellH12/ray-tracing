@@ -46,8 +46,7 @@ class Camera{
                 ray r(c, (tl-c));
 
                 double seno = ( 1.0 + r.get_direction().getY() ) / 2.0; // calcula o ângulo pra usar como porcentagem da cor do ceu 
-                Intersection inter (backgroud_top * ((double)(v_res - y)/(double)v_res) + backgroud_bottom * ((double)y/(double)v_res));
-                
+                Intersection inter; //backgroud_top * ((double)(v_res - y)/(double)v_res) + backgroud_bottom * ((double)y/(double)v_res);
                 objeto* obi = NULL;
                 double dist = DOUBLEINF;
 

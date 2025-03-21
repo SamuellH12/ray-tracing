@@ -138,8 +138,8 @@ Scene get_scene_classic(int v_res=600, int h_res= 800, point camPos = point(-322
     // cena.add_obj(new Bline(std::vector<point>({point(0, 0, 0), point(0, 10, 0)}), Color(0.2, 0.9, 0.3), 1));
     
     
-    cena.add_obj(new plano(point(1000, 70, 10000), vetor(0, 1, 0), Color(0, 0.2, 0.9)));
-    cena.objetos.back()->setke( Color(1, 1, 1) );
+    // cena.add_obj(new plano(point(1000, 70, 10000), vetor(0, 1, 0), Color(0, 0.2, 0.9)));
+    // cena.objetos.back()->setke( Color(1, 1, 1) );
 
 
     // cena.add_obj(new esfera(point(1000, -200, -800), 150, vetor(1, 1, 0)));
@@ -169,6 +169,18 @@ Scene get_scene_classic(int v_res=600, int h_res= 800, point camPos = point(-322
                 // cena.objetos.back()->setks(cl * k/3.0);
             }
 
+    objReader objm("inputs/cubo2.obj");
+    auto macaco = new malha(objm);
+    cena.add_obj( macaco );
+    matrix<4, 4> m ({
+        {6, 0, 0,  0},
+        {0, 6, 0,  4},
+        {0, 0, 6,  0},
+        {0, 0, 0,  1},
+    });
+    macaco->affine_transform(m);
+
+    std::cerr << "d mamaco " << macaco->getd() << endl;
 
     Color RED(1, 0, 0);
     cena.add_obj(new esfera(point(70, 0, 170), 50, RED));

@@ -90,7 +90,9 @@ private:
 
 public:
     malha(){}
-    malha(objReader &obj) : objeto(point(), obj.getKd()) {
+
+    // objeto(point pos, Color kd, Color ks, Color ka, Color ke, double ni, double d, double ns) : 
+    malha(objReader &obj) : objeto(point(), obj.getKd(), obj.getKs(), obj.getKa(), obj.getKe(), obj.getNi(), obj.getD(), obj.getNs() ) {
         vertices = obj.getVertices();
         normals = obj.getNormals();
         faces = obj.getFaces();
@@ -198,7 +200,7 @@ public:
 // se não existir ignora o objeto
 private:
     const int LIM_TREE_NODE = 32; //limite de faces por nó
-    point centroid;
+    point &centroid = pos;
     std::vector<std::pair<point, point>> boundboxes;
     std::vector<std::pair<int, int>> node_childs;
 
@@ -249,6 +251,7 @@ private:
     }
 
     void calc_centroid(){
+        centroid = point();
         for(auto p : vertices)
             centroid = centroid + p.to_vetor();
         centroid = point() + centroid.to_vetor() / vertices.size();

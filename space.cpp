@@ -26,6 +26,7 @@ sf::Vector2i mousePos;
 
 double time_correction = 0.01;
 inline double delta_time(){ return time_correction; }
+uint8_t minmax(double x){ return max(min((int)(x*255.0), 255), 0); }
 
 void update_pos(Camera &cam, sf::RenderWindow &window){
     vetor x = cam.get_v(); x = vetor(x.getX(), 0, x.getZ()).normalized();
@@ -75,7 +76,6 @@ void check_dist(Camera &cam){
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::N))  cam.set_dist(cam.get_dist() - 0.1);
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::M))  cam.set_dist(cam.get_dist() + 0.1);
 }
-int minmax(int x){ return max(min(x, 255), 0); }
 
 int LUZID = 0;
 void update_pos_luz(std::vector<Luz>& luzes, Camera& cam, sf::RenderWindow &window){
@@ -264,9 +264,9 @@ int main(){
         for(int x = 0; x < WIDTH; x++) {
             for(int y = 0; y < HEIGHT; y++) {
                 sf::Color color(
-                    minmax(img_colors[x + y*WIDTH].getX()*255),
-                    minmax(img_colors[x + y*WIDTH].getY()*255),
-                    minmax(img_colors[x + y*WIDTH].getZ()*255)
+                    minmax(img_colors[x + y*WIDTH].getX()),
+                    minmax(img_colors[x + y*WIDTH].getY()),
+                    minmax(img_colors[x + y*WIDTH].getZ())
                 );
                 image.setPixel(sf::Vector2u(x, y), color);
             }

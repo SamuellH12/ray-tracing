@@ -42,9 +42,6 @@ int main(){
     // generate_img(cena_debug);
 
     Scene cena_classica = get_scene_classic();
-    // cerr << "ok?";
-    // ray r(cena_classica.cam.get_pos(), point(0, 3, 0));
-    // cena_classica.objetos.front()->get_intersection(r, cena_classica.La, cena_classica.luzes, cena_classica.objetos);
     generate_img(cena_classica);
 
     return 0;
