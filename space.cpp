@@ -208,6 +208,7 @@ void check_colors(objeto* obj){
 
 int main(){
     cerr << fixed << setprecision(2);
+    MAXREC = 5;
  
     auto cena = get_scene_classic(HEIGHT, WIDTH);
     auto &cam = cena.cam;

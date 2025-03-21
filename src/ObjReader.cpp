@@ -88,17 +88,16 @@ public:
                     iss >> slash;  // cuiadado com o caso 1//1  em que o número do meio está faltando
                     while(slash != '/') iss >> slash;
                     iss >> face.normalIndice[i];
-                    face.ka = curMaterial.ka;
-                    face.kd = curMaterial.kd;
-                    face.ks = curMaterial.ks;
-                    face.ke = curMaterial.ke;
-                    face.ns = curMaterial.ns;
-                    face.ni = curMaterial.ni;
-                    face.d = curMaterial.d;
+                    face.setka(curMaterial.ka);
+                    face.setkd(curMaterial.kd);
+                    face.setks(curMaterial.ks);
+                    face.setke(curMaterial.ke);
+                    face.setns(curMaterial.ns);
+                    face.setni(curMaterial.ni);
+                    face.setd(curMaterial.d);
                     face.verticeIndice[i]--;
                     face.normalIndice[i]--;
                 }
-                face.recalc_normal(vertices);
                 faces.push_back(face);
             }
 
@@ -190,10 +189,6 @@ public:
             }
             std::clog << std::endl;
         }
-    }
-
-    void print_faces_k(){
-        for(auto &f : faces) f.print_k();
     }
 };
 

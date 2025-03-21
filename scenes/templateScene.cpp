@@ -120,7 +120,7 @@ Scene get_scene_sample(){
 }
 
 
-Scene get_scene_classic(int v_res=600, int h_res= 800, point camPos = point(-322, 34, -182), point luzPos = point(10, 60, 10)){
+Scene get_scene_classic(int v_res=600, int h_res= 800, point camPos = point(-322, 34, -182), point luzPos = point(11, 65, 10)){
     point mira(0, 0, 0); 
     vetor up (0, 1, 0);
     double dist = 0.75;
@@ -138,20 +138,20 @@ Scene get_scene_classic(int v_res=600, int h_res= 800, point camPos = point(-322
     // cena.add_obj(new Bline(std::vector<point>({point(0, 0, 0), point(0, 10, 0)}), Color(0.2, 0.9, 0.3), 1));
     
     
-    // cena.add_obj(new plano(point(1000, 70, 10000), vetor(0, 1, 0), Color(0, 0.2, 0.9)));
-    // cena.objetos.back()->setke( Color(1, 1, 1) );
+    cena.add_obj(new plano(point(1000, 70, 10000), vetor(0, 1, 0), Color(0, 0.2, 0.9)));
+    cena.objetos.back()->setke( Color(1, 1, 1) );
 
 
     // cena.add_obj(new esfera(point(1000, -200, -800), 150, vetor(1, 1, 0)));
     
     // // cena.add_obj(new tabuleiro(point(0, -10, 0), vetor(0, 1, 0), vetor(1, 0, 0), vetor(0.3, 0.8, 0.4), vetor(1, 1, 1)));
     cena.add_obj(new plano(point(0, -10, 0), vetor(0, 1, 0), Color(0.3, 0.8, 0.4)));
-    cena.objetos.back()->setke( Color(0.5, 0.5, 0.5) );
+    cena.objetos.back()->setke( Color(0.75, 0.75, 0.75) );
     // // cena.objetos.back()->setka( Color(0.3, 0.8, 0.4) );
     // cena.objetos.back()->setka(Color());
     // cena.objetos.back()->setks(Color());
     // cena.objetos.back()->setkd(Color());
-    cena.objetos.back()->setd(0.01);
+    cena.objetos.back()->setd(0.1);
     cena.objetos.back()->setni(1.1);
 
     vetor dlt(-300, 0, 0);
@@ -173,14 +173,14 @@ Scene get_scene_classic(int v_res=600, int h_res= 800, point camPos = point(-322
     auto macaco = new malha(objm);
     cena.add_obj( macaco );
     matrix<4, 4> m ({
-        {6, 0, 0,  0},
-        {0, 6, 0,  4},
-        {0, 0, 6,  0},
+        {20, 0, 0,  0},
+        {0, 20, 0,  20*sqrt(2)},
+        {0, 0, 20,  0},
         {0, 0, 0,  1},
     });
-    macaco->affine_transform(m);
+    macaco->affine_transform(m * MatrixXRotation(PI/4) * MatrixZRotation(PI/4) );
+    cena.add_obj(new esfera(macaco->get_centroid(), 0.5, Color(0, 0, 1)));
 
-    std::cerr << "d mamaco " << macaco->getd() << endl;
 
     Color RED(1, 0, 0);
     cena.add_obj(new esfera(point(70, 0, 170), 50, RED));
@@ -193,8 +193,11 @@ Scene get_scene_classic(int v_res=600, int h_res= 800, point camPos = point(-322
 
 
     cena.add_obj(new esfera(point(-200, 5, -170), 10, Color()));
+    cena.objetos.back()->setka(Color());
+    cena.objetos.back()->setks(Color());
+    cena.objetos.back()->setkd(Color());
     cena.objetos.back()->setd(0.01);
-    cena.objetos.back()->setni(1.1);
+    cena.objetos.back()->setni(1.01);
 
     // point cpos(1500, 0, 300);
     // double csz = 500;

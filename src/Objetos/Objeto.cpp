@@ -9,7 +9,7 @@
 #include <tuple>
 #include "../Luz.cpp"
 
-const int MAXREC = 10;
+int MAXREC = 10;
 const double DOUBLEINF = std::numeric_limits<double>::infinity();
 
 struct Intersection {
@@ -102,7 +102,6 @@ public:
         Intersection IR;
         Intersection IT;
 
-        
         // reflexão
         if(ke.norm2() > 0) //só calcula se o objeto for reflexivo
         {

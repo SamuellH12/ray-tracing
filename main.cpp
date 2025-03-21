@@ -41,7 +41,7 @@ int main(){
     // Scene cena_debug = get_scene_debug();
     // generate_img(cena_debug);
 
-    Scene cena_classica = get_scene_classic();
+    Scene cena_classica = get_scene_classic(600, 800, point(-258, 4, -86));
     generate_img(cena_classica);
 
     return 0;
