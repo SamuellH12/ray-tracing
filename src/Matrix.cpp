@@ -106,4 +106,23 @@ matrix<4, 4> MatrixZRotation(double theta){
     {0, 0, 0, 1}
   });
 }
+
+matrix<4, 4> MatrixTranslation(vetor v){
+  return matrix<4, 4> ({
+    {1, 0, 0, v.getX()},
+    {0, 1, 0, v.getY()},
+    {0, 0, 1, v.getZ()},
+    {0, 0, 0, 1}
+  });
+}
+
+matrix<4, 4> MatrixScale(vetor v){
+  return matrix<4, 4> ({
+    {v.getX(), 0, 0, 0},
+    {0, v.getY(), 0, 0},
+    {0, 0, v.getZ(), 0},
+    {0, 0, 0, 1}
+  });
+}
+
 #endif

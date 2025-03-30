@@ -9,8 +9,9 @@
 #include <tuple>
 #include "../Luz.cpp"
 
-int MAXREC = 10;
+const int MAXREC = 5;
 const double DOUBLEINF = std::numeric_limits<double>::infinity();
+Color __background (0, 0, 0);
 
 struct Intersection {
     double dist = 1.0/0.0; //double inf
@@ -99,11 +100,11 @@ public:
             I = I + newI*f;
         }
 
-        Intersection IR;
-        Intersection IT;
+        Intersection IR(__background);
+        Intersection IT(__background);
 
         // reflexão
-        if(ke.norm2() > 0) //só calcula se o objeto for reflexivo
+        if(ke.norm2() > 0 && profundidade > 1) //só calcula se o objeto for reflexivo
         {
             vetor rv = r.get_direction() * -1;
             vetor Rf = (normal*2.0*(normal*rv) - rv).normalized();
@@ -124,11 +125,12 @@ public:
         }
 
         // refração
-        if(d < 1.0) // só calcula se o objeto for transparente
+        if(d < 1.0 && profundidade > 1) // só calcula se o objeto for transparente
         {
             vetor rv = r.get_direction();
             double n1 = 1;
             double n2 = ni;
+            if(rv*normal < 0) std::swap(n1, n2);
             double n = n2/n1;
             double seni = (rv%normal).norm();
             double senr = seni/n2; //sin O_t

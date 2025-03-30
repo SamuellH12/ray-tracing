@@ -16,6 +16,7 @@ struct Scene {
     std::vector<Luz> luzes;
     Luz La;
     int h_res, v_res;
+    bool ceu = true;
 
     Scene(Camera cam, Luz La = Color(0.5, 0.5, 0.5)) : cam(cam), La(La) {
         h_res = cam.h_res;
@@ -24,7 +25,12 @@ struct Scene {
     void add_obj(objeto* o){ objetos.emplace_back(o); }
     void add_luz(Luz l){ luzes.emplace_back(l); }
 
-    std::vector<Color> shot(bool show_percentage=true){ return cam.shot(objetos, luzes, La, show_percentage); }
+    std::vector<Color> shot(bool show_percentage=true){ 
+        cam.h_res = h_res; 
+        cam.v_res = v_res; 
+        if(!ceu) return cam.shot(objetos, luzes, La, show_percentage, Color(), Color()); 
+        return cam.shot(objetos, luzes, La, show_percentage); 
+    }
 
     void delete_objs(){
         for(objeto* obj: objetos) delete obj;

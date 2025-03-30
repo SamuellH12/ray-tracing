@@ -21,5 +21,5 @@ target_link_libraries(space PRIVATE SFML::Graphics)
 
 # add_compile_options(-fopenmp)
 message(STATUS, "CXXFLAGS: ${CMAKE_CXX_FLAGS}")
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -fopenmp" )
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -fopenmp -Ofast" )
 message(STATUS, "CXXFLAGS: ${CMAKE_CXX_FLAGS}")

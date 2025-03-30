@@ -30,6 +30,7 @@ long long _NcK(int N, int K){ //N Choose K
 }
 
 double Bernstein(int N, int i, double t){ return _NcK(N, i) * pow(t, i) * pow(1.0 - t, N-i); }
+int BezierRecLvl = 7;
 
 class Bline : public objeto {
 private:
@@ -38,6 +39,7 @@ public:
     double D;
     bool showMeta = false;
     double metat = 0.5;
+    double METASZ = 3;
     
     point BX1, BX2;
 
@@ -62,11 +64,52 @@ public:
         return point() + a.to_vetor()*(1.0-t) + b.to_vetor()*(t);
     }
 
-    bool has_intersection(ray &r, double tmax = std::numeric_limits<double>::infinity()) override{
-        return false;
+    double get_dist(std::vector<point> p, ray &r, int lvl = BezierRecLvl){
+        auto [bx1, bx2] = calc_boundbox(p);
+        if(!boundbox_intersection(r, bx1, bx2)) return DOUBLEINF;
+
+        if(lvl <= 0) // (p.front() - p.back()).norm2() < D*D ||
+        {
+            point pt = getPt(p.front(), p.back(), 0.5);
+            vetor oc = r.get_origin() - pt;
+            double a = r.get_direction() * r.get_direction();
+            double b = 2.0 * (oc * r.get_direction());
+            double c = oc*oc - D*D;
+            double dlt = b*b - 4.0*a*c;
+            if(dlt < 0.0) return DOUBLEINF;
+
+            double raiz = sqrt(dlt);
+            double t = (-b - raiz) / (2.0*a);
+            if(t < 0) t = (-b + raiz) / (2.0*a);
+            if(t < 0) return DOUBLEINF;
+            return t;
+        }
+
+        std::vector<point> L, R;
+
+        while(p.size() > 1)
+        {
+            L.push_back(p.front());
+            R.push_back(p.back());
+
+            for(int i=0; i+1<p.size(); i++)
+                p[i] = getPt(p[i], p[i+1], 0.5);
+            p.pop_back();
+        }
+
+        L.push_back(p.front());
+        R.push_back(p.back());
+        for(int i=0, j=R.size()-1; i<j; i++, j--) std::swap(R[i], R[j]);
+
+        return std::min(get_dist(L, r, lvl-1), get_dist(R, r, lvl-1));
     }
 
-    Intersection solve(std::vector<point> p, ray &r, int lvl = 8){
+    double dist_intersection(ray &r) override{
+        if(showMeta) return std::min(get_dist(pts, r), metaInter(r, pts, METASZ).dist);
+        return get_dist(pts, r);
+    }
+
+    Intersection solve(std::vector<point> p, ray &r, int lvl = BezierRecLvl){
         auto [bx1, bx2] = calc_boundbox(p);
         if(!boundbox_intersection(r, bx1, bx2)) return Intersection();
 
@@ -85,7 +128,7 @@ public:
             if(t < 0) t = (-b + raiz) / (2.0*a);
             if(t < 0) return Intersection();
             vetor normal = (r.get_point(t) - pt).normalized();
-            return Intersection(t, normal, kd);
+            return Intersection(t, normal, Color(0, 1, 0));
         }
 
         std::vector<point> L, R;
@@ -113,7 +156,7 @@ public:
 
         // if(ans.normal.norm2() > 0) ans.color = get_color(r, r.get_point(ans.dist), ans.normal, Ia, luzes, objetos);
 
-        if(showMeta) ans = std::min(ans, metaInter(r, pts, 2)); 
+        if(showMeta) ans = std::min(ans, metaInter(r, pts, METASZ)); 
 
         return ans;
     }
@@ -143,16 +186,16 @@ private:
         Intersection ans = Intersection();
 
         for(int i=0; i+1<pt.size(); i++)
-            ans = std::min(ans, std::min(point_intersection(r, pt[i], h), line_intersection(r, pt[i], pt[i+1], h/4.0)));
+            ans = std::min(ans, std::min(point_intersection(r, pt[i], h), line_intersection(r, pt[i], pt[i+1], h*0.30)));
 
-        ans = std::min(ans, point_intersection(r, pt.back(), h));
+        ans = std::min(ans, point_intersection(r, pt.back(), pt.size() == 1 ? METASZ : h));
 
         for(int i=0; i+1<pt.size(); i++)
                 pt[i] = getPt(pt[i], pt[i+1], metat);
         
         pt.pop_back();
 
-        ans = std::min(ans, metaInter(r, pt, h*0.5));
+        ans = std::min(ans, metaInter(r, pt, h*0.75));
 
         return ans;
     }

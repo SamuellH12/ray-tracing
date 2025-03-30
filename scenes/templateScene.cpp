@@ -12,51 +12,48 @@
 #include "sceneObj.cpp"
 #include <vector>
 
-Scene get_scene_debug(point camPos = point(20, 10, 10), point luzPos = point(10, 3, 10)){
-    point mira(10, 0, 10); 
-    vetor up (1.1, 0, 0);
+Scene get_scene_debug(point camPos = point(-5, 10, -5), point luzPos = point(13, 30, 21)){
+    point mira(0, 0, 0); 
+    vetor up (0, 1, 0);
     double dist = 0.75;
-    const int v_res=1080/2;
-    const int h_res= 1920/2;
+    point esferaPos (0, 0, 0);
 
-    Scene cena(Camera(camPos, mira, up, dist, v_res, h_res), Luz(Color(0.01, 0.01, 0.01)));
-
-    /*************************************/
-    // Adicionar objetos na cena
-    cena.luzes.emplace_back(Color(1, 1, 1), luzPos);
-
-    // cena.add_obj(new plano(point(-1000, 10000, -1000), vetor(0, -1, 0), Color(0.3, 0.8, 0.4)));
-    // cena.objetos.back()->setke(Color(1, 1, 1));
-
-
-    cena.add_obj(new plano(point(0, -7, 0), vetor(0, 1, 0), Color(0.3, 0.8, 0.4)));
-    cena.objetos.back()->setka( Color(0.3, 0.8, 0.4) );
-    cena.objetos.back()->setke(Color(0.7, 0.7, 0.7))  ;
+    objReader objm("inputs/cubo2.obj");
+    auto macaco = new malha(objm);
+    // camPos = macaco->get_centroid() + (macaco->boundboxes[0].second - macaco->get_centroid())*2;
     
-    cena.add_obj(new esfera(mira, 0.75, vetor(0.1, 0.2, 0.9)));
+    Scene cena(Camera(camPos, esferaPos, up, dist), Luz(Color(0.25, 0.25, 0.25)));
+    cena.h_res = 2048/2;
+    cena.v_res = 2048/2;
 
-    objReader obj("inputs/cubo.obj");
-    objReader obj2("inputs/cubo2.obj");
-    auto cubo = new malha(obj);
-    auto cubo2 = new malha(obj2);
-    // cena.add_obj( cubo );
-    // cena.add_obj( cubo2 );
+    cena.luzes.emplace_back(Color(0.75, 0.75, 0.75), camPos + (luzPos - point()));
+    // cena.luzes.emplace_back(Color(0.95, 0.05, 0.15), camPos + (point() - luzPos));
     
-    /*************************************/
-    // matrizes de operadores afins
-    matrix<4, 4> translacao ({
-        {1, 0, 0, 0},
-        {0, 1, 0, 5},
-        {0, 0, 1, 0},
-        {0, 0, 0, 1},
-    });
-    cubo2->affine_transform(translacao);
-    cubo2->get_centroid().print();
-    
-    // objReader objm("inputs/monkey.obj");
-    // auto macaco = new malha(objm);
-    // cena.add_obj( macaco );
-    // macaco->affine_transform(translacao);
+    cena.add_obj( macaco );
+    macaco->affine_transform(MatrixTranslation(vetor(-2, 2, 4)));
+
+    // cena.add_obj(new plano(point(0, -10, 0), vetor(0, 1, 0), Color(0.3, 0.8, 0.4)));
+    // cena.objetos.back()->setke( Color(0.75, 0.75, 0.75) );
+    // cena.objetos.back()->setd(0.1);
+    // cena.objetos.back()->setni(1.1);
+    // Color RED(1, 0, 0);
+    // cena.add_obj(new plano(point(0, -4, 0), vetor(0, 1, 0), Color(0.3, 0.8, 0.4)));
+    // cena.objetos.back()->setka( Color(0.3, 0.8, 0.4) );
+
+    cena.add_obj(new tabuleiro(point(0, -3, 0), vetor(0, 1, 0), vetor(1, 0, 0), Color(0.1, 0.5, 0.1), Color(1, 1, 1), 5));
+    cena.objetos.back()->setke(Color(1, 1, 1)*0.15);
+
+    cena.add_obj(new esfera(point(-2, 0, 0), 3, Color(0, 0, 0)));
+    cena.objetos.back()->setd(0.1);
+    cena.objetos.back()->setni(1.1);
+    // cena.objetos.back()->setks();
+    cena.objetos.back()->setke(Color(1, 1, 1)*0.2);
+
+    cena.add_obj(new esfera(point(2, 0, 0), 3, Color()));
+    cena.objetos.back()->setke( Color(1, 1, 1) * 0.9 );
+    // cena.objetos.back()->setkd( Color(218, 165, 32)/255 * 0.75 ) ;
+    // cena.objetos.back()->setka( Color(218, 165, 32)/255 * 0.5 ) ;
+
 
     return cena;
 }
@@ -125,9 +122,10 @@ Scene get_scene_classic(int v_res=600, int h_res= 800, point camPos = point(-322
     vetor up (0, 1, 0);
     double dist = 0.75;
 
-    Scene cena(Camera(camPos, mira, up, dist, v_res, h_res), Luz(Color(0.25, 0.25, 0.25)));
+    Scene cena(Camera(camPos, mira, up, dist, v_res, h_res), Luz(Color(0.1, 0.1, 0.1)));
+    cena.ceu = false;
 
-    cena.luzes.emplace_back(Color(0.75, 0.75, 0.75), luzPos);
+    cena.luzes.emplace_back(Color(0.5, 0.5, 0.5), luzPos);
     // cena.luzes.emplace_back(Color(1, 0, 0), point(-50, 15,  20));
     // cena.luzes.emplace_back(Color(0, 1, 0), point(+50, 15,  20));
     // cena.luzes.emplace_back(Color(0, 0, 1), point(-50, 15, -20));
@@ -220,6 +218,43 @@ Scene get_scene_classic(int v_res=600, int h_res= 800, point camPos = point(-322
 
     return cena;
 }
+
+
+
+
+Scene get_scene_macacoDeVidro(int v_res=600, int h_res= 800, point camPos = point(-32, 15, 28), point luzPos = point(11, 65, 10)){
+    point mira(0, 0, 0); 
+    vetor up (0, 1, 0);
+    double dist = 0.75;
+
+    Scene cena(Camera(camPos, mira, up, dist, v_res, h_res), Luz(Color(0.1, 0.1, 0.1)));
+    cena.ceu = false;
+
+    cena.luzes.emplace_back(Color(0.75, 0.75, 0.75), luzPos);
+    
+
+    cena.add_obj(new plano(point(0, -10, 0), vetor(0, 1, 0), Color(0.3, 0.8, 0.4)));
+    cena.objetos.back()->setke( Color(0.75, 0.75, 0.75) );
+
+    for(int i=0; i<3; i+=2)
+        for(int j=0; j<3; j+=2)
+            for(int k=0; k<3; k+=2){
+                cena.add_obj(new esfera(point(i*30 - 30, j*30, k*30 - 30), 7.5, Color(0.5*i, 0.5*j, 0.5*k)));
+                Color cl(0.25, 0.25, 0.75);
+                // cena.objetos.back()->setkd(cl * i/3.0);
+                cena.objetos.back()->setka(cl * j/3.0);
+                // cena.objetos.back()->setks(cl * k/3.0);
+            }
+
+    objReader objm("inputs/macaco.obj");
+    auto macaco = new malha(objm);
+    cena.add_obj( macaco );
+    macaco->affine_transform(MatrixTranslation(vetor(0, 2, 1)) * MatrixScale(vetor(1, 1, 1) * 5) );
+
+
+    return cena;
+}
+
 
 
 #endif

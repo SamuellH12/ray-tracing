@@ -41,8 +41,11 @@ int main(){
     // Scene cena_debug = get_scene_debug();
     // generate_img(cena_debug);
 
-    Scene cena_classica = get_scene_classic(600, 800, point(-258, 4, -86));
-    generate_img(cena_classica);
+    // Scene cena_classica = get_scene_classic(600, 800, point(-258, 4, -86));
+    // generate_img(cena_classica);
+
+    Scene cena_m = get_scene_macacoDeVidro(); //600, 800, point(-258, 4, -86));
+    generate_img(cena_m);
 
     return 0;
 }
