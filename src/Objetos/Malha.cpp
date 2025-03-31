@@ -12,6 +12,7 @@
 #include <vector>
 #include <deque>
 #include <tuple>
+#include <functional>
 #include<algorithm>
 
 class malha : public objeto {
@@ -52,12 +53,10 @@ public:
             if(!boundbox_intersection(r2, boundboxes[u].first, boundboxes[u].second))
                 continue;
 
-            if(node_childs[u].first != -1)
-            {
-                q.emplace_back(node_childs[u].first, l, (l+r)/2);
-                q.emplace_back(node_childs[u].second, (l+r)/2+1, r);
-            }
-            else 
+            if(node_childs[u][0] != 0)
+                for(auto ch : node_childs[u])
+                    q.emplace_back(ch, node_range[ch].first, node_range[ch].second);
+            else
                 for(int i=l; i<=r; i++)
                     t = std::min(t, faces[i].dist_intersection(r2));
         }
@@ -78,11 +77,9 @@ public:
             if(!boundbox_intersection(r2, boundboxes[u].first, boundboxes[u].second))
                 continue;
 
-            if(node_childs[u].first != -1)
-            {
-                q.emplace_back(node_childs[u].first, l, (l+r)/2);
-                q.emplace_back(node_childs[u].second, (l+r)/2+1, r);
-            }
+            if(node_childs[u][0] != 0)
+                for(auto ch : node_childs[u])
+                    q.emplace_back(ch, node_range[ch].first, node_range[ch].second);
             else 
                 for(int i=l; i<=r; i++)
                     if(faces[i].dist_intersection(r2) < tmax)
@@ -108,11 +105,9 @@ public:
             if(!boundbox_intersection(r2, boundboxes[u].first, boundboxes[u].second))
                 continue;
 
-            if(node_childs[u].first != -1)
-            {
-                q.emplace_back(node_childs[u].first, l, (l+r)/2);
-                q.emplace_back(node_childs[u].second, (l+r)/2+1, r);
-            }
+            if(node_childs[u][0] != 0)
+                for(auto ch : node_childs[u])
+                    q.emplace_back(ch, node_range[ch].first, node_range[ch].second);
             else for(int i=l; i<=r; i++){
                 double dt = faces[i].dist_intersection(r2);
                 if(0.0 < dt && dt < dist)   
@@ -144,7 +139,8 @@ private:
     const int LIM_TREE_NODE = 32; //limite de faces por nó
     point &centroid = pos;
     std::vector<std::pair<point, point>> boundboxes;
-    std::vector<std::pair<int, int>> node_childs;
+    std::vector<std::array<int, 8>> node_childs;
+    std::vector<std::pair<int, int>> node_range;
 
 
     void calc_tree(){
@@ -154,7 +150,8 @@ private:
         
         q.emplace_back(0, 0, (int)faces.size()-1);
         boundboxes.emplace_back(point(), point());
-        node_childs.emplace_back(-1, -1);
+        node_childs.emplace_back();
+        node_range.emplace_back(0, (int)faces.size()-1);
 
         while(!q.empty())
         {
@@ -165,29 +162,34 @@ private:
 
             if(r-l+1 >= 2*LIM_TREE_NODE)
             {
-                double xl =  boundboxes[u].second.getX() - boundboxes[u].first.getX();
-                double yl =  boundboxes[u].second.getY() - boundboxes[u].first.getY();
-                double zl =  boundboxes[u].second.getZ() - boundboxes[u].first.getZ();
+                int chid = 0;
+                std::function<void(int, int)>  create_child = [&](int ll, int rr){
+                    node_childs[u][chid++] = node_childs.size();
+                    q.emplace_back(node_childs.size(), ll, rr);
+                    boundboxes.emplace_back();
+                    node_childs.emplace_back();
+                    node_range.emplace_back(ll, rr);
+                };
 
-                int sortby = 0;
-                if(yl >= zl && yl >= xl) sortby = 1;
-                if(zl >= yl && zl >= xl) sortby = 2;
+                std::function<void(int, int)> calc_for_z = [&](int ll, int rr) -> void {
+                    std::sort(std::begin(faces) + ll, std::begin(faces) + rr, [&](Face &a, Face &b){ return a.vertices[0]->getZ() < b.vertices[0]->getZ(); });
+                    int m = (ll+rr)/2;
+                    create_child(ll, m);
+                    create_child(m+1, rr);
+                };
 
-                std::sort(std::begin(faces) + l, std::begin(faces) + r, [&](Face &a, Face &b){
-                    if(sortby == 1) return a.vertices[0]->getX() < b.vertices[0]->getX();
-                    if(sortby == 2) return a.vertices[0]->getY() < b.vertices[0]->getY();
-                    return a.vertices[0]->getZ() < b.vertices[0]->getZ();
-                });
+                std::function<void(int, int)> calc_for_y = [&](int ll, int rr) -> void {
+                    std::sort(std::begin(faces) + ll, std::begin(faces) + rr, [&](Face &a, Face &b){ return a.vertices[0]->getY() < b.vertices[0]->getY(); });
+                    int m = (ll+rr)/2;
+                    calc_for_z(ll, m);
+                    calc_for_z(m+1, rr);
+                };
 
-                node_childs[u] = {node_childs.size(), node_childs.size()+1};
-
-                q.emplace_back(node_childs.size(), l, (l+r)/2);
-                boundboxes.emplace_back(point(), point());
-                node_childs.emplace_back(-1, -1);
-
-                q.emplace_back(node_childs.size(), (l+r)/2+1, r);
-                boundboxes.emplace_back(point(), point());
-                node_childs.emplace_back(-1, -1);
+                //calc for x
+                std::sort(std::begin(faces) + l, std::begin(faces) + r, [&](Face &a, Face &b){ return a.vertices[0]->getX() < b.vertices[0]->getX(); });
+                int m = (l+r)/2;
+                calc_for_y(l, m);
+                calc_for_y(m+1, r);
             }
         }
     }
